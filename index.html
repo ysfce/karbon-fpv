@@ -1572,7 +1572,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
           <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-kit"/></svg></span></div>
           <div><h3 class="d-md">Freestyle 5" 6S</h3><p class="sub">Sahnede kurduğumuz build. Bando ve park için standart.</p></div>
           <div class="stats">
-            <div><span class="k">Kalkış ağırlığı</span><span class="v">552 g</span></div>
+            <div><span class="k">Kalkış ağırlığı</span><span class="v">540 g</span></div>
             <div><span class="k">Batarya</span><span class="v">6S 1400 mAh</span></div>
             <div><span class="k">Uçuş süresi</span><span class="v">~4,5 dk</span></div>
             <div><span class="k">Parça sayısı</span><span class="v">9</span></div>
@@ -2033,9 +2033,9 @@ var P = [
  chips:['5×4,3','3 kanat','PC'],vars:{label:'Renk',opts:['Duman','Siyah','Cinema Pembe']},
  specs:{'Çap':'5 inç','Hatve':'4,3','Kanat':'3','Mil':'M5','Malzeme':'Poli-karbonat','Ağırlık':'4,5 g / adet'},
  desc:'Freestyle’ın varsayılan pervanesi. Sert, sessiz, kırılmak yerine esner. 2 CW + 2 CCW olarak gelir.'},
-{id:'b9',cat:'lipo',brand:'Tattu',name:'R-Line V5 6S 1400 mAh 150C',price:2890,rate:4.9,rev:156,stock:'in',pop:95,cell:'6S',w:235,
+{id:'b9',cat:'lipo',brand:'Tattu',name:'R-Line V5 6S 1400 mAh 150C',price:2890,rate:4.9,rev:156,stock:'in',pop:95,cell:'6S',w:223,
  chips:['6S','1400 mAh','150C'],vars:{label:'Kapasite',opts:['1400 mAh','1100 mAh','1800 mAh']},
- specs:{'Hücre':'6S1P 22,2 V','Kapasite':'1400 mAh','Deşarj':'150C sürekli','Konnektör':'XT60','Denge fişi':'JST-XH','Ağırlık':'235 g'},
+ specs:{'Hücre':'6S1P 22,2 V','Kapasite':'1400 mAh','Deşarj':'150C sürekli','Ölçü':'78×38×40 mm','Konnektör':'XT60','Denge fişi':'JST-XH','Ağırlık':'223 g'},
  desc:'R-Line V5 tam gazda voltaj sagını en az yapan pakettir. 150C tepe deşarj, 6S freestyle için standart.'},
 
 /* --- gövde --- */
@@ -2210,7 +2210,7 @@ var P = [
  desc:'İlk quad için her şey kutuda: gövde, motor, stack, kamera, VTX, alıcı, pervane, batarya ve sarf. Ayarlar yüklenmiş gelir.'},
 {id:'kit2',cat:'kit',brand:'Karbon FPV',name:'Freestyle 5" 6S Kit',price:13900,old:15050,rate:4.9,rev:128,stock:'in',pop:100,size:'5',cell:'6S',
  chips:['5 inç','6S','552 g'],vars:{label:'Montaj',opts:['Lehimsiz','Lehimli (+₺950)']},
- specs:{'Sınıf':'5 inç freestyle','Kalkış ağırlığı':'552 g','Batarya':'6S 1400 mAh','Uçuş süresi':'~4,5 dk','Video':'Analog 800 mW','Parça':'9 adet'},
+ specs:{'Sınıf':'5 inç freestyle','Kalkış ağırlığı':'540 g','Batarya':'6S 1400 mAh','Uçuş süresi':'~4,5 dk','Video':'Analog 800 mW','Parça':'9 adet'},
  desc:'Ana sayfada adım adım kurduğumuz build’in tamamı. Bando ve park için standart 5 inç.'},
 {id:'kit3',cat:'kit',brand:'Karbon FPV',name:'Cinewhoop 3,5" HD Kit',price:21750,old:23900,rate:4.8,rev:52,stock:'low',pop:86,size:'3.5',cell:'6S',
  chips:['3,5 inç','HD','Korumalı'],vars:{label:'Montaj',opts:['Lehimsiz','Lehimli (+₺950)']},
@@ -2253,7 +2253,7 @@ var PARTS = [
   txt:'İki CW, iki CCW. Motor yönünü Betaflight’ta doğrulamadan pervane takmayın.'},
  {k:'lipo',  rail:'LİPO',   pid:'b9', title:'Batarya',           sub:'Kalkışa hazır',
   specs:[['Hücre','6S 22,2 V'],['Kapasite','1400 mAh'],['Deşarj','150C']],
-  txt:'Gövdenin üst kapağı standoff’lara vidalanır, batarya da kayışla onun üstüne bağlanır. 235 g ile kalkış ağırlığının %43’ünü tek başına yapar.'}
+  txt:'Gövdenin üst kapağı standoff’lara vidalanır, batarya da kayışla onun üstüne bağlanır. 223 g ile kalkış ağırlığının %41’ini tek başına yapar.'}
 ];
 /* katman görünürlük başlangıçları (ilk parça istirahatte görünür) */
 var RS = [-0.09, 0.135, 0.225, 0.315, 0.405, 0.495, 0.585, 0.675, 0.765];
@@ -3230,7 +3230,7 @@ var camera = new THREE.PerspectiveCamera(40, 1, 5, 4000);
   s.addColorStop(0,'#dfe6ef'); s.addColorStop(1,'rgba(223,230,239,0)');
   c.fillStyle = s; c.fillRect(0,0,512,256);
   var s2 = c.createRadialGradient(390,105,4,390,105,70);
-  s2.addColorStop(0,'#ffb489'); s2.addColorStop(1,'rgba(255,180,137,0)');
+  s2.addColorStop(0,'#b9cfe8'); s2.addColorStop(1,'rgba(185,207,232,0)');
   c.fillStyle = s2; c.fillRect(0,0,512,256);
   var tex = new THREE.CanvasTexture(cv);
   tex.mapping = THREE.EquirectangularReflectionMapping;
@@ -3276,15 +3276,34 @@ var M = {
   glass:    new THREE.MeshStandardMaterial({color:0x123f43, roughness:.06, metalness:.9}),
   lensRing: new THREE.MeshStandardMaterial({color:0x8f99a6, roughness:.3,  metalness:1}),
   wire:     new THREE.MeshStandardMaterial({color:0x2b323b, roughness:.72, metalness:.1}),
-  prop:     new THREE.MeshStandardMaterial({color:0x6b7684, roughness:.3,  metalness:.04, envMapIntensity:.5,
-              transparent:true, opacity:.44, side:THREE.DoubleSide}),
+  /* --- referans fotoğraflarından alınan tonlar --- */
+  bell:     new THREE.MeshStandardMaterial({color:0x33383e, roughness:.38, metalness:.85, envMapIntensity:.6}),
+  bellLip:  new THREE.MeshStandardMaterial({color:0x59606a, roughness:.34, metalness:.95, envMapIntensity:.7}),
+  steel:    new THREE.MeshStandardMaterial({color:0xc3c8ce, roughness:.26, metalness:1}),
+  aluBright:new THREE.MeshStandardMaterial({color:0xb6c0ca, roughness:.24, metalness:1}),
+  tpu:      new THREE.MeshStandardMaterial({color:0xc9e63a, roughness:.62, metalness:0, envMapIntensity:.5}),
+  grommet:  new THREE.MeshStandardMaterial({color:0xe8c022, roughness:.78, metalness:0, envMapIntensity:.5}),
+  wrapSilver:new THREE.MeshStandardMaterial({color:0x8b9198, roughness:.42, metalness:.35, envMapIntensity:.3}),
+  wrapRidge:new THREE.MeshStandardMaterial({color:0x6e747b, roughness:.46, metalness:.3, envMapIntensity:.28}),
+  label:    new THREE.MeshStandardMaterial({color:0xd4b41c, roughness:.55, metalness:.05, envMapIntensity:.3}),
+  wireRed:  new THREE.MeshStandardMaterial({color:0xb4241e, roughness:.55, metalness:.05, envMapIntensity:.4}),
+  plugWhite:new THREE.MeshStandardMaterial({color:0xd6d9dc, roughness:.6,  metalness:0,  envMapIntensity:.4}),
+  camBody:  new THREE.MeshStandardMaterial({color:0x1c1f24, roughness:.55, metalness:.1, envMapIntensity:.4}),
+  prop:     new THREE.MeshStandardMaterial({color:0x16191e, roughness:.44, metalness:.05, envMapIntensity:.35,
+              side:THREE.DoubleSide}),
   teal:     new THREE.MeshStandardMaterial({color:0x3fe0bf, roughness:.4, metalness:.2,
               emissive:0x1c6b5c, emissiveIntensity:.6})
 };
 
+M.ribbon = [0xd23b2c, 0xd9922e, 0xd8c53a, 0x4faa5a, 0x3f7fd0, 0xffffff].map(function(c){
+  return new THREE.MeshStandardMaterial({color:c, roughness:.6, metalness:.05});
+});
+M.ribbon.forEach(function(m, i){ M['ribbon' + i] = m; });
+
 /* r134 hex renkleri doğrusal sayar, çıkışta gama uygular; renkleri önceden
    sRGB -> doğrusala çevirmezsek her yüzey soluk griye kaçar. */
 Object.keys(M).forEach(function(k){
+  if (k === 'ribbon') return;
   if (M[k].color)    M[k].color.convertSRGBToLinear();
   if (M[k].emissive) M[k].emissive.convertSRGBToLinear();
 });
@@ -3324,284 +3343,367 @@ function at(o,x,y,z){ o.position.set(x,y,z); return o; }
 var MXY = 80;              /* motor merkezleri: (±80, ±80) -> 226 mm köşegen */
 var STACK = 15.25;         /* 30,5×30,5 montaj deseni */
 
-/* ================= 01 · GÖVDE ================= */
+/* ================================================================
+   PARÇA MODELLERİ — referans fotoğraflardan
+   GEPRC Mark5 · T-Motor F60 Pro V 2207.5 · SpeedyBee F405 V4 stack
+   HQProp 5×4,3×3 V1S · Tattu R-Line 6S 1400
+   Renkler ve oranlar ürün fotoğraflarına sadık: quad üzerinde turuncu
+   yoktur; turuncu yalnızca arayüzün vurgu rengidir.
+   ================================================================ */
+
+/* Uzatılmış X ("squashed X"): ön kollar geniş, arka kollar biraz dar,
+   gövde önden arkaya uzun. Simetrik X değil. */
+var MOT = [[-80,-78],[80,-78],[-72,88],[72,88]];
+
+/* ================= 01 · GÖVDE (GEPRC Mark5) ================= */
+function makeArm(px, pz){
+  var g = new THREE.Group();
+  var len = Math.hypot(px, pz);
+  var s = new THREE.Shape();
+  s.moveTo(-8.5, 14); s.lineTo(8.5, 14);
+  s.lineTo(7.2, len - 12); s.lineTo(-7.2, len - 12); s.lineTo(-8.5, 14);
+  var arm = slab(s, 6.5, M.carbon);
+  g.add(arm);
+  /* motor tablası + kolun ucundaki TPU tampon */
+  var pad = cyl(15, 15, 6.5, 30, M.carbon);
+  pad.position.set(0, 3.25, -(len - 12)); g.add(pad);
+  var bore = cyl(4.5, 4.5, 7.2, 18, M.dark);
+  bore.position.set(0, 3.25, -(len - 12)); g.add(bore);
+  for (var i = 0; i < 4; i++){
+    var a = i / 4 * Math.PI * 2 + Math.PI / 4;
+    var h = cyl(1.8, 1.8, 7.2, 10, M.dark);
+    h.position.set(Math.cos(a) * 9.7, 3.25, -(len - 12) + Math.sin(a) * 9.7);
+    g.add(h);
+  }
+  var bump = cyl(15.5, 13, 5, 26, M.tpu);
+  bump.position.set(0, .5, -(len - 4)); g.add(bump);
+  g.rotation.y = Math.atan2(-px, -pz);
+  return g;
+}
 function makeFrame(){
   var g = new THREE.Group();
-  /* alt plaka */
-  var bp = slab(roundRect(46, 98, 9), 2.5, M.carbon); bp.position.y = -2.5; g.add(bp);
-  /* dört kol + motor tablası */
-  for (var i=0;i<4;i++){
-    var arm = new THREE.Group();
-    var s = new THREE.Shape();
-    s.moveTo(4,-8.5); s.lineTo(99,-7); s.lineTo(99,7); s.lineTo(4,8.5); s.lineTo(4,-8.5);
-    var a = slab(s, 5, M.carbon); arm.add(a);
-    var pad = cyl(14,14,5,28,M.carbon); pad.position.set(113,2.5,0); arm.add(pad);
-    var padHole = cyl(4,4,5.6,18,M.dark); padHole.position.set(113,2.5,0); arm.add(padHole);
-    arm.rotation.y = rad(45 + i*90);
-    g.add(arm);
+  var bottom = slab(roundRect(46, 148, 12), 2.5, M.carbon);
+  bottom.position.y = -2.5; g.add(bottom);
+  g.userData.arms = [];
+  for (var i = 0; i < MOT.length; i++){
+    var arm = makeArm(MOT[i][0], MOT[i][1]);
+    g.userData.arms.push(arm); g.add(arm);
   }
-  /* standoff'lar 30,5×30,5 */
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var p = cyl(2.7,2.7,36,16,M.alu); p.position.set(sx*STACK, 18, sz*STACK); g.add(p);
-    var b1 = cyl(3.4,3.4,2,12,M.aluDark); b1.position.set(sx*STACK, 1, sz*STACK); g.add(b1);
+  /* stack standoff'ları 30,5×30,5 */
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var p = cyl(2.7, 2.7, 36, 16, M.aluDark);
+    p.position.set(sx * STACK, 18, sz * STACK); g.add(p);
   }
-  /* yüzey detayı: alt plakada panel çizgileri ve M3 vida başları */
-  var pl1 = box(38,.5,1.0,M.dark); pl1.position.set(0,.06,-30); g.add(pl1);
-  var pl2 = box(38,.5,1.0,M.dark); pl2.position.set(0,.06, 30); g.add(pl2);
-  var SCREWS = [[0,-43],[0,43],[-16,-36],[16,-36],[-16,36],[16,36]];
-  for (var si=0; si<SCREWS.length; si++){
-    var head = cyl(2.2,2.2,1.2,14,M.aluDark);
-    head.position.set(SCREWS[si][0], .6, SCREWS[si][1]); g.add(head);
-    var slot = box(2.9,.45,.7,M.dark);
-    slot.position.set(SCREWS[si][0], 1.15, SCREWS[si][1]); g.add(slot);
-  }
-  /* kamerayı tutan ön yan plakalar — kamera boşlukta durmasın */
-  for (var s=-1; s<=1; s+=2){
-    var side = new THREE.Mesh(new THREE.BoxGeometry(2, 24, 20), M.carbon);
-    side.castShadow = side.receiveShadow = true;
-    side.position.set(s*11.6, 12, -40);
+  /* kamerayı tutan gümüş alüminyum yan plakalar — Mark5'in imzası */
+  for (var s = -1; s <= 1; s += 2){
+    var side = new THREE.Group();
+    var sh = new THREE.Shape();
+    sh.moveTo(-24, 0); sh.lineTo(20, 0);
+    sh.quadraticCurveTo(26, 14, 18, 27);
+    sh.lineTo(-16, 27); sh.quadraticCurveTo(-26, 15, -24, 0);
+    var plate = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(sh, {depth:2.4, bevelEnabled:true, bevelThickness:.3, bevelSize:.3, bevelSegments:1}),
+      M.aluBright);
+    plate.castShadow = plate.receiveShadow = true;
+    side.add(plate);
+    var win = cyl(6.5, 6.5, 4, 20, M.dark); win.position.set(-2, 14, 1.2); side.add(win);
+    side.position.set(s * 12.4, 3, -44);
+    side.rotation.y = Math.PI / 2;   /* plaka yana baksın */
     g.add(side);
+  }
+  /* ön ve arka TPU tamponlar */
+  var noseB = box(26, 6, 7, M.tpu); noseB.position.set(0, 1, -72); g.add(noseB);
+  var tailB = box(30, 6, 7, M.tpu); tailB.position.set(0, 1, 72);  g.add(tailB);
+  /* alt plakada panel çizgileri ve M3 vida başları */
+  var SCREWS = [[0,-62],[0,62],[-17,-52],[17,-52],[-17,52],[17,52]];
+  for (var si = 0; si < SCREWS.length; si++){
+    var head = cyl(2.2, 2.2, 1.2, 14, M.aluDark);
+    head.position.set(SCREWS[si][0], .6, SCREWS[si][1]); g.add(head);
+    var slot = box(2.9, .45, .7, M.dark);
+    slot.position.set(SCREWS[si][0], 1.15, SCREWS[si][1]); g.add(slot);
   }
   return g;
 }
 
-/* ================= 02 · MOTORLAR (2207) ================= */
+/* ================= 02 · MOTOR (F60 Pro V 2207.5) ================= */
 function makeMotor(){
   var m = new THREE.Group();
-  var base = cyl(13.6,13.6,3,32,M.aluDark); base.position.y = 6.5; m.add(base);
-  var stator = cyl(11.5,11.5,7,32,M.dark);  stator.position.y = 11; m.add(stator);
-  var bell = cyl(13.95,13.2,15,36,M.alu);   bell.position.y = 18.5; m.add(bell);
-  var ring = cyl(14.1,14.1,2.2,36,M.anod);  ring.position.y = 25.4; m.add(ring);
-  var cap = cyl(13.2,13.9,1.6,36,M.alu);    cap.position.y = 26.8; m.add(cap);
-  for (var i=0;i<8;i++){
-    var a = i/8*Math.PI*2;
-    var hole = cyl(1.9,1.9,2.2,12,M.dark);
-    hole.position.set(Math.cos(a)*8.6, 27.2, Math.sin(a)*8.6); m.add(hole);
+  /* X şeklinde işlenmiş alüminyum taban */
+  for (var b = 0; b < 2; b++){
+    var foot = box(30, 3, 9, M.aluBright);
+    foot.position.y = 6.5; foot.rotation.y = b * Math.PI / 2; m.add(foot);
   }
-  var shaft = cyl(2.5,2.5,7,16,M.alu); shaft.position.y = 30; m.add(shaft);
-  var nut   = cyl(4,4,2.6,6,M.aluDark); nut.position.y = 28.4; m.add(nut);
-  /* motor kablosu */
-  var curve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0,7,13), new THREE.Vector3(-6,6,22), new THREE.Vector3(-22,4,34)]);
-  var w = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 1.1, 8, false), M.wire);
-  w.castShadow = true; m.add(w);
+  var stator = cyl(11.4, 11.4, 7, 32, M.dark); stator.position.y = 11.5; m.add(stator);
+  /* çan: düz koyu gri anotlu, turuncu halka yok */
+  var bell = cyl(13.95, 13.6, 11, 40, M.bell); bell.position.y = 18; m.add(bell);
+  var lip  = cyl(14.05, 14.05, 1.2, 40, M.bellLip); lip.position.y = 23.4; m.add(lip);
+  /* üstü kapalı değil: açık örümcek — yedi kol, aralarında boşluk */
+  var hub = cyl(4.6, 4.6, 3.4, 20, M.bellLip); hub.position.y = 24.6; m.add(hub);
+  for (var i = 0; i < 7; i++){
+    var a = i / 7 * Math.PI * 2;
+    var spoke = box(3.1, 2.2, 9.6, M.bellLip);
+    spoke.position.set(Math.cos(a) * 8.6, 24.2, Math.sin(a) * 8.6);
+    spoke.rotation.y = -a;
+    m.add(spoke);
+  }
+  /* dişli çelik mil */
+  var shaftBase = cyl(2.9, 2.9, 5, 18, M.steel); shaftBase.position.y = 27.5; m.add(shaftBase);
+  var shaft = cyl(2.5, 2.5, 12, 18, M.steel);    shaft.position.y = 36;   m.add(shaft);
+  var thrTop = cyl(2.62, 2.62, 1.1, 16, M.steel); thrTop.position.y = 40.6; m.add(thrTop);
+  var wire = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0,8,13), new THREE.Vector3(-6,7,22), new THREE.Vector3(-22,5,34)]), 14, 1.1, 8, false), M.wire);
+  wire.castShadow = true; m.add(wire);
+  m.userData.bellPivot = bell;
   return m;
 }
 function makeMotors(){
-  var g = new THREE.Group();
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+  var g = new THREE.Group(); g.userData.units = [];
+  for (var i = 0; i < MOT.length; i++){
     var m = makeMotor();
-    m.position.set(sx*MXY, 0, sz*MXY);
-    m.rotation.y = Math.atan2(-sx, -sz);
-    g.add(m);
+    m.position.set(MOT[i][0], 0, MOT[i][1]);
+    m.rotation.y = Math.atan2(-MOT[i][0], -MOT[i][1]);
+    g.userData.units.push(m); g.add(m);
   }
   return g;
 }
 
-/* ================= devre kartı ortak gövdesi ================= */
-function boardBase(size, y, label){
+/* ================= kart gövdesi ortak ================= */
+function boardBase(size, y, mat){
   var g = new THREE.Group();
-  var b = slab(roundRect(size, size, 3), 1.6, M.pcb); g.add(b);
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var pad = cyl(3,3,1.9,14,M.gold); pad.position.set(sx*STACK, .8, sz*STACK); g.add(pad);
-    var hole = cyl(1.6,1.6,2.2,10,M.dark); hole.position.set(sx*STACK, .8, sz*STACK); g.add(hole);
+  var b = slab(roundRect(size, size, 3), 1.6, mat || M.pcb); g.add(b);
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var pad = cyl(3, 3, 1.9, 14, M.gold); pad.position.set(sx*STACK, .8, sz*STACK); g.add(pad);
+    var hole = cyl(1.6, 1.6, 2.2, 10, M.dark); hole.position.set(sx*STACK, .8, sz*STACK); g.add(hole);
+  }
+  /* iki kenarda altın lehim pad sıraları — SpeedyBee'nin görünümü */
+  for (var i = 0; i < 9; i++){
+    var z = -16 + i * 4;
+    var p1 = box(3.2, .5, 2.2, M.gold); p1.position.set(-size/2 + 3, .9, z); g.add(p1);
+    var p2 = box(3.2, .5, 2.2, M.gold); p2.position.set( size/2 - 3, .9, z); g.add(p2);
   }
   g.position.y = y;
   return g;
 }
 
-/* ================= 03 · ESC (4'ü 1 arada) ================= */
+/* ================= 03 · ESC (BLS 55A) ================= */
 function makeEsc(){
-  var g = boardBase(36, 6, 'ESC');
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var fet = box(8,1.6,7,M.chip); fet.position.set(sx*8.5, 2.4, sz*8); g.add(fet);
+  var g = boardBase(38, 6);
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var fet = box(8, 1.8, 7, M.chip); fet.position.set(sx*9, 2.5, sz*8.5); g.add(fet);
   }
-  var cap = cyl(5.2,5.2,10,20,M.aluDark); cap.position.set(0,6.6,13); cap.rotation.x = Math.PI/2;
-  cap.position.set(0,4,14); g.add(cap);
-  for (var i=0;i<4;i++){
-    var p1 = cyl(1.5,1.5,1.8,10,M.gold); p1.position.set(-18.6, 1.6, -12+i*8); g.add(p1);
-    var p2 = cyl(1.5,1.5,1.8,10,M.gold); p2.position.set( 18.6, 1.6, -12+i*8); g.add(p2);
+  var cap = cyl(5.2, 5.2, 10, 20, M.aluDark);
+  cap.rotation.x = Math.PI/2; cap.position.set(0, 4, 15); g.add(cap);
+  /* gümüş batarya lehim tabları */
+  for (var s = -1; s <= 1; s += 2){
+    var tab = cyl(3.4, 3.4, .9, 18, M.aluBright); tab.position.set(s*6, 1.3, -17); g.add(tab);
   }
   var xtWire = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0,2.4,16), new THREE.Vector3(4,4,26), new THREE.Vector3(6,10,36)]), 12, 1.6, 8, false), M.dark);
+    new THREE.Vector3(0,2.4,17), new THREE.Vector3(4,4,27), new THREE.Vector3(6,10,37)]), 12, 1.7, 8, false), M.wireRed);
   g.add(xtWire);
   return g;
 }
 
-/* ================= 04 · UÇUŞ KONTROL ================= */
+/* ================= 04 · UÇUŞ KONTROL KARTI (F405 V4) ================= */
 function makeFc(){
-  var g = boardBase(36, 16, 'FC');
-  var gyro = box(9,1.4,9,M.chip); gyro.position.set(0,2.3,0); g.add(gyro);
-  var mcu  = box(11,1.2,11,M.chip); mcu.position.set(0,2.3,0); mcu.visible = false; g.add(mcu);
-  var usb  = box(9,3.2,7,M.alu); usb.position.set(0,2.4,-18.5); g.add(usb);
-  var chip2 = box(7,1.2,5,M.chip); chip2.position.set(11,2.2,-8); g.add(chip2);
-  var led = cyl(1,1,.6,10,M.teal); led.position.set(-13,2.2,12); g.add(led);
-  /* turuncu kauçuk takozlar */
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var gr = cyl(3.2,3.2,3.4,16,M.rubber); gr.position.set(sx*STACK, 1.4, sz*STACK); g.add(gr);
-    var hl = cyl(1.5,1.5,4,10,M.dark); hl.position.set(sx*STACK, 1.4, sz*STACK); g.add(hl);
+  var g = boardBase(36, 16);
+  var mcu  = box(9, 1.5, 9, M.chip);  mcu.position.set(2, 2.4, 1); g.add(mcu);
+  var gyro = box(4.5, 1, 4.5, M.chip); gyro.position.set(-9, 2.1, -6); g.add(gyro);
+  var usb  = box(9, 3.2, 7, M.aluBright); usb.position.set(6, 2.5, -17); g.add(usb);
+  var ble  = box(5, 1.6, 3.4, M.wireRed); ble.position.set(-13, 2.3, -12); g.add(ble);
+  var led  = cyl(1, 1, .6, 10, M.teal); led.position.set(-13, 2.2, 12); g.add(led);
+  /* SARI kauçuk takozlar — fotoğraftaki gibi, turuncu değil */
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var gr = cyl(3.3, 3.3, 4.2, 16, M.grommet); gr.position.set(sx*STACK, 1.4, sz*STACK); g.add(gr);
+    var hl = cyl(1.5, 1.5, 4.8, 10, M.dark);    hl.position.set(sx*STACK, 1.4, sz*STACK); g.add(hl);
   }
-  for (var i=0;i<3;i++){
-    var pd = cyl(1.4,1.4,1.8,10,M.gold); pd.position.set(-18.6,1.6,-6+i*6); g.add(pd);
+  /* gökkuşağı kablo şeridi — kartın kenarından çıkar */
+  for (var c = 0; c < 6; c++){
+    var w = box(.9, .9, 9, M.ribbon[c]);
+    w.position.set(-6 + c * 1.5, 2.2, 20); g.add(w);
   }
+  g.userData.usbPivot = usb;
   return g;
 }
 
-/* ================= 05 · VTX ================= */
+/* ================= 05 · VIDEO VERİCİ (Rush Tank) ================= */
 function makeVtx(){
   var g = new THREE.Group();
-  var b = slab(roundRect(30,30,3), 1.4, M.pcb); g.add(b);
-  var hs = box(24,5,20,M.aluDark); hs.position.set(0,3.4,-2); g.add(hs);
-  for (var i=0;i<7;i++){
-    var fin = box(1.2,3.2,19,M.alu); fin.position.set(-10.5+i*3.5, 6.9, -2); g.add(fin);
+  var b = slab(roundRect(30, 30, 3), 1.4, M.pcb); g.add(b);
+  var shell = box(26, 6, 22, M.aluDark); shell.position.set(0, 4.4, -1); g.add(shell);
+  for (var i = 0; i < 7; i++){
+    var fin = box(1.2, 3.2, 20, M.alu); fin.position.set(-10.5 + i*3.5, 8.6, -1); g.add(fin);
   }
-  var mmcx = cyl(2.4,2.4,4,14,M.alu); mmcx.position.set(-11,2.6,12); mmcx.rotation.x = Math.PI/2; g.add(mmcx);
-  var pin = cyl(.7,.7,4.6,8,M.gold); pin.position.set(-11,2.6,12); pin.rotation.x = Math.PI/2; g.add(pin);
-  var conn = box(9,2.4,4,M.chip); conn.position.set(7,2,12); g.add(conn);
-  var led2 = cyl(.9,.9,.6,10,M.anod); led2.position.set(12,1.4,10); g.add(led2);
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var h = cyl(1.5,1.5,2,10,M.dark); h.position.set(sx*STACK*.98, .7, sz*STACK*.98); g.add(h);
+  var mmcx = cyl(2.4, 2.4, 4, 14, M.alu); mmcx.position.set(-11, 2.6, 12); mmcx.rotation.x = Math.PI/2; g.add(mmcx);
+  var conn = box(9, 2.4, 4, M.chip); conn.position.set(7, 2, 12); g.add(conn);
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var h = cyl(1.5, 1.5, 2, 10, M.dark); h.position.set(sx*STACK*.98, .7, sz*STACK*.98); g.add(h);
   }
-  /* çift anten vericinin üstünde durur ve yukarı bakar (DJI O4, analog lolipop) */
-  for (var s=-1; s<=1; s+=2){
+  /* çift anten vericinin üstünde durur ve yukarı bakar */
+  for (var s = -1; s <= 1; s += 2){
     var ant = new THREE.Group();
-    var boot = cyl(1.9,1.9,5,10,M.aluDark); boot.position.y = 3;  ant.add(boot);
-    var rod  = cyl(1.1,1.1,26,10,M.wire);   rod.position.y = 15;  ant.add(rod);
-    var loop = new THREE.Mesh(new THREE.TorusGeometry(5.5,1.3,10,26), M.anod);
+    var boot = cyl(1.9, 1.9, 5, 10, M.aluDark); boot.position.y = 3;  ant.add(boot);
+    var rod  = cyl(1.1, 1.1, 26, 10, M.wire);   rod.position.y = 15;  ant.add(rod);
+    var loop = new THREE.Mesh(new THREE.TorusGeometry(5.5, 1.3, 10, 26), M.aluDark);
     loop.position.y = 32; loop.castShadow = true; ant.add(loop);
     ant.position.set(s*11, 2, 4);
     ant.rotation.z = rad(-s*18); ant.rotation.x = rad(14);
     g.add(ant);
   }
-  /* VTX stack'in üstüne binmez; gövdenin arkasına, hava akışına açık yere oturur */
-  g.position.set(0, 9, 34);
+  g.position.set(0, 9, 56);   /* üst kapağın arka kenarını geçsin, antenler plakayı delmesin */
   return g;
 }
 
-/* ================= 06 · KAMERA ================= */
+/* ================= 06 · KAMERA (Foxeer Razer Micro) ================= */
 function makeCam(){
   var g = new THREE.Group();
-  var body = box(19,19,14,M.pcb); g.add(body);
-  var back = box(16,16,2,M.chip); back.position.z = 7.6; g.add(back);
-  var barrel = cyl(8,8.6,9,28,M.aluDark); barrel.rotation.x = Math.PI/2; barrel.position.z = -10; g.add(barrel);
-  var ring = cyl(8.2,8.2,1.4,28,M.lensRing); ring.rotation.x = Math.PI/2; ring.position.z = -14.4; g.add(ring);
-  var glass = cyl(6.4,6.4,1.2,28,M.glass); glass.rotation.x = Math.PI/2; glass.position.z = -14.9; g.add(glass);
-  for (var s=-1; s<=1; s+=2){
-    var br = box(2,12,10,M.alu); br.position.set(s*10.5,0,-1); g.add(br);
-    var scr = cyl(1.6,1.6,2.4,10,M.aluDark); scr.position.set(s*11.4,0,-1); scr.rotation.z = Math.PI/2; g.add(scr);
+  var body = box(19, 19, 14, M.camBody); g.add(body);
+  var back = box(16, 16, 2, M.chip); back.position.z = 7.6; g.add(back);
+  var barrel = cyl(8, 8.6, 9, 28, M.camBody); barrel.rotation.x = Math.PI/2; barrel.position.z = -10; g.add(barrel);
+  var ring = cyl(8.2, 8.2, 1.6, 28, M.lensRing); ring.rotation.x = Math.PI/2; ring.position.z = -14.5; g.add(ring);
+  var glass = cyl(6.4, 6.4, 1.2, 28, M.glass); glass.rotation.x = Math.PI/2; glass.position.z = -15.1; g.add(glass);
+  for (var s = -1; s <= 1; s += 2){
+    var br = box(2, 12, 10, M.aluBright); br.position.set(s*10.5, 0, -1); g.add(br);
+    var scr = cyl(1.6, 1.6, 2.4, 10, M.aluDark); scr.position.set(s*11.4, 0, -1); scr.rotation.z = Math.PI/2; g.add(scr);
   }
-  g.position.set(0, 18, -42);
-  g.rotation.x = rad(20);   /* FPV kamerası yukarı bakar: ~20° yukarı açı */
+  g.position.set(0, 18, -46);
+  g.rotation.x = rad(20);
+  g.userData.lensPivot = barrel;
   return g;
 }
 
-/* ================= 07 · ALICI & ANTEN ================= */
+/* ================= 07 · ALICI (RadioMaster RP1) ================= */
 function makeRx(){
   var g = new THREE.Group();
-  var b = slab(roundRect(22,11,1.5), 1.2, M.pcb); g.add(b);
-  var chip = box(5,1,4,M.chip); chip.position.set(-6,1.6,0); g.add(chip);
-  var led = cyl(.8,.8,.5,8,M.teal); led.position.set(6,1.4,3); g.add(led);
-  /* ELRS alıcı anteni kısa ve incedir: ~15 mm koaks, ucunda küçük makaron.
-     Yukarı bakan büyük lolipoplar alıcıda değil, video vericide durur. */
-  for (var s=-1; s<=1; s+=2){
+  var b = slab(roundRect(22, 11, 1.5), 1.2, M.pcb); g.add(b);
+  var chip = box(5, 1, 4, M.chip); chip.position.set(-6, 1.6, 0); g.add(chip);
+  var led = cyl(.8, .8, .5, 8, M.teal); led.position.set(6, 1.4, 3); g.add(led);
+  for (var s = -1; s <= 1; s += 2){
     var ant = new THREE.Group();
-    var rod = cyl(.5,.5,15,8,M.wire);      rod.position.y = 7.5; ant.add(rod);
-    var tip = cyl(1.1,1.1,4.5,8,M.aluDark); tip.position.y = 16.5; ant.add(tip);
+    var rod = cyl(.5, .5, 15, 8, M.wire);       rod.position.y = 7.5;  ant.add(rod);
+    var tip = cyl(1.1, 1.1, 4.5, 8, M.aluDark); tip.position.y = 16.5; ant.add(tip);
     ant.position.set(s*7, 1, 4);
     ant.rotation.z = rad(-s*30); ant.rotation.x = rad(70);
     g.add(ant);
   }
-  g.position.set(0, 28, 11);
+  g.position.set(0, 28, 14);
   return g;
 }
 
-/* ================= 08 · PERVANELER (5×4,3×3) ================= */
+/* ================= 08 · PERVANE (HQProp 5×4,3×3 V1S) ================= */
 function bladeGeometry(){
+  /* kökte dar, en geniş yeri %70 açıklıkta, ucu küt yuvarlak */
   var s = new THREE.Shape();
-  s.moveTo(6,-5);
-  s.quadraticCurveTo(22,-8.4, 38,-7.6);
-  s.quadraticCurveTo(52,-6.6, 61,-3.6);
-  s.quadraticCurveTo(64.6,-1, 63.4,2.2);
-  s.quadraticCurveTo(56,6.6, 40,8.2);
-  s.quadraticCurveTo(22,9.2, 6,5);
-  s.quadraticCurveTo(3,0, 6,-5);
+  s.moveTo(6, -3.2);
+  s.quadraticCurveTo(20, -5.6, 34, -6.4);
+  s.quadraticCurveTo(48, -6.8, 57, -4.4);
+  s.quadraticCurveTo(63.5, -2, 62.6, 2.2);
+  s.quadraticCurveTo(55, 6.8, 42, 8.6);
+  s.quadraticCurveTo(26, 9.4, 6, 4.2);
+  s.quadraticCurveTo(2.4, .4, 6, -3.2);
   var g = new THREE.ExtrudeGeometry(s, {depth:1.5, bevelEnabled:false});
-  g.translate(0,0,-0.75);
+  g.translate(0, 0, -0.75);
   var pos = g.attributes.position;
-  for (var i=0;i<pos.count;i++){
+  for (var i = 0; i < pos.count; i++){
     var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
-    var t = clamp((x-6)/57, 0, 1);
-    var a = rad(-27 + 17*t);                    /* kökte yüksek hatve, uçta düşük */
-    pos.setY(i, y*Math.cos(a) - z*Math.sin(a));
-    pos.setZ(i, y*Math.sin(a) + z*Math.cos(a));
+    var t = clamp((x - 6) / 57, 0, 1);
+    var a = rad(-29 + 19 * t);
+    pos.setY(i, y * Math.cos(a) - z * Math.sin(a));
+    pos.setZ(i, y * Math.sin(a) + z * Math.cos(a));
   }
   pos.needsUpdate = true;
   g.computeVertexNormals();
-  g.rotateX(-Math.PI/2);
+  g.rotateX(-Math.PI / 2);
   return g;
 }
-var BLADE = null;
+/* g.scale.z = -1 normalleri ters çevirip kanadı ışıkta yanlış gösteriyordu;
+   CCW pervane için gerçek ayna geometrisi üretiyoruz. */
+function mirrorZ(geo){
+  var g = geo.clone();
+  g.applyMatrix4(new THREE.Matrix4().makeScale(1, 1, -1));
+  var p = g.attributes.position.array, tmp;
+  if (g.index){
+    var a = g.index.array;
+    for (var i = 0; i < a.length; i += 3){ tmp = a[i]; a[i] = a[i+2]; a[i+2] = tmp; }
+    g.index.needsUpdate = true;
+  } else {
+    for (var j = 0; j < p.length; j += 9){
+      for (var k = 0; k < 3; k++){ tmp = p[j+k]; p[j+k] = p[j+6+k]; p[j+6+k] = tmp; }
+    }
+    g.attributes.position.needsUpdate = true;
+  }
+  g.computeVertexNormals();
+  return g;
+}
+var BLADE = null, BLADE_M = null;
 function makeProp(cw){
   var g = new THREE.Group();
-  if (!BLADE) BLADE = bladeGeometry();
-  for (var i=0;i<3;i++){
-    var b = new THREE.Mesh(BLADE, M.prop);
-    b.castShadow = true;
-    b.rotation.y = i/3*Math.PI*2;
+  if (!BLADE){ BLADE = bladeGeometry(); BLADE_M = mirrorZ(BLADE); }
+  var geo = cw ? BLADE : BLADE_M;
+  for (var i = 0; i < 3; i++){
+    var b = new THREE.Mesh(geo, M.prop);
+    b.castShadow = true; b.rotation.y = i / 3 * Math.PI * 2;
     g.add(b);
   }
-  var hub = cyl(8,8,5.5,24,M.alu); hub.position.y = 1.6; g.add(hub);
-  var hole = cyl(2.6,2.6,6.4,14,M.dark); hole.position.y = 1.6; g.add(hole);
-  if (!cw) g.scale.z = -1;
+  var hub  = cyl(5.6, 5.6, 5, 24, M.prop);  hub.position.y = 1.4; g.add(hub);
+  var coll = cyl(3.6, 3.6, 6.4, 20, M.prop); coll.position.y = 2.4; g.add(coll);
+  var bore = cyl(2.6, 2.6, 7, 16, M.dark);   bore.position.y = 2.4; g.add(bore);
   return g;
 }
 function makeProps(){
   var g = new THREE.Group(); g.userData.spinners = [];
-  var i = 0;
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var p = makeProp((sx*sz) > 0);
-    p.position.set(sx*MXY, 31.5, sz*MXY);
-    p.userData.dir = (sx*sz) > 0 ? 1 : -1;
-    g.userData.spinners.push(p);
-    g.add(p); i++;
+  for (var i = 0; i < MOT.length; i++){
+    var cw = (MOT[i][0] * MOT[i][1]) > 0;
+    var p = makeProp(cw);
+    p.position.set(MOT[i][0], 31.5, MOT[i][1]);
+    p.userData.dir = cw ? 1 : -1;
+    g.userData.spinners.push(p); g.add(p);
   }
   return g;
 }
 
-/* ================= 09 · ÜST PLAKA + BATARYA ================= */
-/* ================= 09 · ÜST KAPAK + BATARYA =================
-   Tek adım, iki hareket: önce kapak standoff'lara iner, sonra pil
-   onun üstüne oturur. Kapak ayrı bir kalem değil, gövde kitinin parçası. */
+/* ================= 09 · ÜST KAPAK + BATARYA ================= */
 function makeTop(){
   var g = new THREE.Group();
-  var tp = slab(roundRect(44, 64, 8), 2, M.carbon); tp.position.y = 36; g.add(tp);
-  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var scr = cyl(2.4,2.4,1.6,12,M.aluDark); scr.position.set(sx*STACK, 38.6, sz*STACK); g.add(scr);
-    var wsh = cyl(3.2,3.2,.8,12,M.alu);     wsh.position.set(sx*STACK, 37.6, sz*STACK); g.add(wsh);
+  var tp = slab(roundRect(40, 104, 10), 2, M.carbon); tp.position.y = 36; g.add(tp);
+  for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
+    var scr = cyl(2.4, 2.4, 1.6, 12, M.aluDark); scr.position.set(sx*STACK, 38.6, sz*STACK); g.add(scr);
+    var wsh = cyl(3.2, 3.2, .8, 12, M.alu);      wsh.position.set(sx*STACK, 37.6, sz*STACK); g.add(wsh);
   }
   return g;
 }
-
 function makeBattery(){
   var plate = makeTop(), pack = makePack(), g = new THREE.Group();
   g.add(plate); g.add(pack);
   g.userData.stagger = { plate: plate, pack: pack };
   return g;
 }
+/* Tattu R-Line: gümüş shrink wrap, sarı etiket bandı, kırmızı kablo */
 function makePack(){
   var g = new THREE.Group();
-  var pack = slab(roundRect(34, 74, 4), 32, M.wrap); pack.position.y = 38; g.add(pack);
-  var band = slab(roundRect(34.4, 74.4, 4), 11, M.anod); band.position.y = 47; g.add(band);
-  for (var s=-1; s<=1; s+=2){
-    var st = box(38, 38, 4.5, M.strap); st.position.set(0, 54, s*23); g.add(st);
+  var body = slab(roundRect(38, 78, 6), 40, M.wrapSilver); body.position.y = 38; g.add(body);
+  /* hücre sırtları — wrap'in altından belli olur */
+  for (var i = 0; i < 5; i++){
+    var ridge = box(.9, 38, 76, M.wrapRidge);
+    ridge.position.set(-15 + i * 7.5, 58, 0); g.add(ridge);
   }
-  var xt = box(16,8,8,M.xt60); xt.position.set(0, 45, 40); g.add(xt);
-  var pin1 = box(3.4,5,8.4,M.dark); pin1.position.set(-4, 45, 40); g.add(pin1);
-  var pin2 = box(3.4,5,8.4,M.dark); pin2.position.set( 4, 45, 40); g.add(pin2);
-  var lead = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3(10,49,39), new THREE.Vector3(18,56,35), new THREE.Vector3(22,63,27)]), 14, 1.4, 8, false), M.wire);
-  lead.castShadow = true; g.add(lead);
-  var plug = box(9,4,3,M.strap); plug.position.set(22,64,26); g.add(plug);
+  var band = slab(roundRect(38.6, 64, 6), 16, M.label); band.position.y = 58; g.add(band);
+  var barcode = box(.6, 10, 26, M.wrapRidge); barcode.position.set(19.2, 50, 14); g.add(barcode);
+  for (var s = -1; s <= 1; s += 2){
+    var st = box(41, 42, 4.5, M.strap); st.position.set(0, 56, s*24); g.add(st);
+  }
+  /* kırmızı silikon kablolar + sarı XT60 */
+  for (var w = -1; w <= 1; w += 2){
+    var lead = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      new THREE.Vector3(w*6, 44, 38), new THREE.Vector3(w*7, 46, 46), new THREE.Vector3(w*4, 48, 52)]), 14, 2.4, 8, false), M.wireRed);
+    lead.castShadow = true; g.add(lead);
+  }
+  var xt = box(16, 8, 8, M.xt60); xt.position.set(0, 48, 55); g.add(xt);
+  var pin1 = box(3.4, 5, 8.4, M.dark); pin1.position.set(-4, 48, 55); g.add(pin1);
+  var pin2 = box(3.4, 5, 8.4, M.dark); pin2.position.set( 4, 48, 55); g.add(pin2);
+  var bal = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-12, 44, 38), new THREE.Vector3(-16, 48, 44), new THREE.Vector3(-14, 52, 48)]), 12, 1.2, 8, false), M.wire);
+  g.add(bal);
+  var plug = box(11, 4.5, 3.5, M.plugWhite); plug.position.set(-14, 53, 48); g.add(plug);
   return g;
 }
 
@@ -3667,7 +3769,7 @@ function thumbRig(){
   sc.environment = scene.environment;
   var key = new THREE.DirectionalLight(0xffeedd, 3.2); key.position.set(-140, 190, 150); key.color.convertSRGBToLinear(); sc.add(key);
   var fil = new THREE.DirectionalLight(0x9dbfe8, .85); fil.position.set(180, 60, -60);   fil.color.convertSRGBToLinear(); sc.add(fil);
-  var rim = new THREE.DirectionalLight(0xff8a4a, 1.25); rim.position.set(30, -50, -190); rim.color.convertSRGBToLinear(); sc.add(rim);
+  var rim = new THREE.DirectionalLight(0xa8c2e4, 1.15); rim.position.set(30, -50, -190); rim.color.convertSRGBToLinear(); sc.add(rim);
   var hem = new THREE.HemisphereLight(0x54677f, 0x0a0e12, 1.0);
   hem.color.convertSRGBToLinear(); hem.groundColor.convertSRGBToLinear(); sc.add(hem);
   var holder = new THREE.Group(); sc.add(holder);
@@ -3794,7 +3896,7 @@ key.shadow.camera.near = 60; key.shadow.camera.far = 700;
 key.shadow.bias = -0.0012; key.shadow.normalBias = .6;
 scene.add(key);
 var fill = new THREE.DirectionalLight(0x8fb0d8, .75); fill.color.convertSRGBToLinear(); fill.position.set(210, 90, -60); scene.add(fill);
-var rim  = new THREE.DirectionalLight(0xff8a4a, .95); rim.color.convertSRGBToLinear(); rim.position.set(40, -30, -230); scene.add(rim);
+var rim  = new THREE.DirectionalLight(0x9ab4d8, .9); rim.color.convertSRGBToLinear(); rim.position.set(40, -30, -230); scene.add(rim);
 var hemi = new THREE.HemisphereLight(0x334051, 0x05070a, .55); hemi.color.convertSRGBToLinear(); hemi.groundColor.convertSRGBToLinear(); scene.add(hemi);
 
 /* ================= kaydırma koreografisi ================= */

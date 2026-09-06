@@ -35,7 +35,11 @@ Thumbnail'ların kendi ışık düzeni var — sahnedeki soğuk anahtar ışık 
 
 ## 3D modeller
 
-Parçalar hazır model dosyası değil, `index.html` içinde Three.js (r134, cdnjs'ten) ile **kodla, milimetre ölçeğinde** kuruluyor — 1 birim = 1 mm, Y ekseni yukarı. Ölçüler gerçek parçalardan alındı:
+Parçalar hazır model dosyası değil, `index.html` içinde Three.js (r134, cdnjs'ten) ile **kodla, milimetre ölçeğinde** kuruluyor — 1 birim = 1 mm, Y ekseni yukarı.
+
+Modeller **ürün fotoğraflarına bakılarak** yazıldı (GEPRC Mark5, T-Motor F60 Pro V 2207.5, SpeedyBee F405 V4 stack, HQProp 5×4,3×3 V1S, Tattu R-Line 6S 1400). Renkler de referansa sadık, bu yüzden **quad üzerinde turuncu yok**: Mark5'in fosforlu sarı-yeşil TPU tamponları, gümüş alüminyum yan plakaları, F60'ın düz koyu gri çanı ve açık örümcek üstü, SpeedyBee'nin sarı takozları, Tattu'nun gümüş shrink wrap'i ve sarı etiket bandı. Turuncu yalnızca arayüzün vurgu rengi olarak kaldı; sahnenin kenar ışığı da bu yüzden nötr maviye çevrildi.
+
+Fotoğraflardan gelen başlıca düzeltmeler: gövde simetrik X değil **uzatılmış X**; motor çanının üstü delikli kapak değil **açık örümcek**, mili dişli; pervane kanadı geniş yaprak değil, kökte dar, en geniş yeri %70 açıklıkta, ucu küt; batarya wrap'i siyah değil gümüş. Ölçüler:
 
 | Parça | Ölçü |
 | --- | --- |
