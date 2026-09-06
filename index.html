@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788706206";
+  var V = "1788706932";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -3210,6 +3210,10 @@ onScroll(true);
 .layer .lp{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
 .layer.has-photo .lp{display:block}
 .layer.has-photo .lv{display:none}
+/* gerçek ürün fotoğrafları beyaz zeminli gelir; koyu kartta ham kare gibi
+   durmasın diye köşeleri yuvarlatıp ince bir üst kenar veriyoruz */
+.pimg{border-radius:5px}
+.card .thumb .pimg,.gal .main .pimg{box-shadow:0 1px 0 rgba(255,255,255,.07)}
 .card .thumb .pimg{width:100%;height:100%;object-fit:contain;padding:9%}
 .gal .main .pimg{width:74%;height:74%;object-fit:contain;position:relative}
 .ci .th .pimg{width:100%;height:100%;object-fit:contain;padding:6%}
