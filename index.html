@@ -291,15 +291,19 @@ main{padding-top:calc(var(--hud-h) + 26px)}
 .layer[data-hot="1"] .hot{stroke:var(--accent);fill:var(--accent)}
 .layer[data-hot="1"] .hot-s{stroke:var(--accent)}
 
-/* patlatılmış çizim etiketi */
+/* patlatılmış çizim etiketi — nokta parçanın üstünde durur, yazı dışarı taşınır */
 .callout{
   position:absolute;z-index:5;pointer-events:none;
   display:flex;align-items:center;gap:8px;
   opacity:0;transition:opacity .3s ease
 }
 .callout.is-on{opacity:1}
-.callout .lead{width:clamp(26px,5vw,58px);height:1px;background:var(--accent-line)}
-.callout .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+/* konumlandırma noktanın merkezine göre: sağa açılan ve sola açılan iki hâl */
+.callout.r{transform:translate(-3px,-50%)}
+.callout.l{flex-direction:row-reverse;transform:translate(calc(-100% + 3px),-50%)}
+.callout .lead{width:48px;height:1px;background:var(--accent-line);flex:0 0 auto}
+.callout .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:0 0 auto;
+  box-shadow:0 0 0 3px rgba(255,90,31,.18)}
 .callout .txt{
   font:500 .68rem/1 var(--f-mono);letter-spacing:.11em;text-transform:uppercase;
   color:var(--accent);white-space:nowrap;
@@ -2038,7 +2042,7 @@ var PARTS = [
  {k:'prop',  rail:'PERVANE',pid:'b8', title:'Pervaneler',        sub:'Son montaj',
   specs:[['Çap','5 inç'],['Hatve','4,3'],['Kanat','3']],
   txt:'İki CW, iki CCW. Motor yönünü Betaflight’ta doğrulamadan pervane takmayın.'},
- {k:'lipo',  rail:'KAPAK + LİPO', pid:'b9', title:'Kapak ve Batarya', sub:'Kalkışa hazır',
+ {k:'lipo',  rail:'LİPO',   pid:'b9', title:'Batarya',           sub:'Kalkışa hazır',
   specs:[['Hücre','6S 22,2 V'],['Kapasite','1400 mAh'],['Deşarj','150C']],
   txt:'Gövdenin üst kapağı standoff’lara vidalanır, batarya da kayışla onun üstüne bağlanır. 235 g ile kalkış ağırlığının %43’ünü tek başına yapar.'}
 ];
@@ -2560,10 +2564,9 @@ el('rail').addEventListener('click', function(e){
 /* callout etiketleri */
 el('callouts').innerHTML = PARTS.map(function(pt,i){
   var c = CALLOUT[i];
-  var inner = c.side==='l'
-    ? '<span class="txt">'+esc(pt.title)+'</span><span class="lead"></span><span class="dot"></span>'
-    : '<span class="dot"></span><span class="lead"></span><span class="txt">'+esc(pt.title)+'</span>';
-  return '<span class="callout" data-c="'+i+'" style="left:'+c.x+'%;top:'+c.y+'%">'+inner+'</span>';
+  /* sıra hep aynı; hangi yöne açılacağını 'l' / 'r' sınıfı belirler */
+  return '<span class="callout '+(c.side==='l'?'l':'r')+'" data-c="'+i+'" style="left:'+c.x+'%;top:'+c.y+'%">'+
+    '<span class="dot"></span><span class="lead"></span><span class="txt">'+esc(pt.title)+'</span></span>';
 }).join('');
 callouts = Array.prototype.slice.call(el('callouts').children);
 
@@ -3201,18 +3204,48 @@ function apply(p){
   needsRender = true;
 }
 
-/* callout etiketlerini 3D noktadan ekrana yansıt */
+/* Callout: nokta parçanın üstüne oturur, yazı modelin siluetinin dışına
+   çıkacak kadar uzatılan bir çizgiyle bağlanır. Modelin ekrandaki yatay
+   sınırını her karede sekiz köşe noktasını yansıtarak buluyoruz. */
 var v = new THREE.Vector3();
+var BOUND = [];
+for (var bi=0; bi<8; bi++){
+  BOUND.push(new THREE.Vector3((bi&1?1:-1)*148, (bi&2?74:0), (bi&4?1:-1)*148));
+}
 function placeCallouts(){
   var w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  var minX = 1e9, maxX = -1e9, bx;
+  for (var b=0;b<BOUND.length;b++){
+    v.copy(BOUND[b]).project(camera);
+    bx = (v.x*.5+.5)*w;
+    if (bx < minX) minX = bx;
+    if (bx > maxX) maxX = bx;
+  }
+  var mid = (minX + maxX) / 2;
   for (var i=0;i<callouts.length && i<ANCHOR.length;i++){
     var c = callouts[i];
     if (!c.classList.contains('is-on')) continue;
     v.copy(ANCHOR[i]).project(camera);
     var x = (v.x*.5+.5)*w, y = (-v.y*.5+.5)*h;
-    c.style.left = clamp(x, 40, w-40) + 'px';
-    c.style.top  = clamp(y, 20, h-20) + 'px';
-    c.style.transform = 'translate(-50%,-50%)';
+    if (c.__tw === undefined){
+      var el2 = c.querySelector('.txt');
+      c.__tw = el2 ? el2.offsetWidth : 92;
+    }
+    var tw = c.__tw + 20;                 /* yazı + boşluklar */
+    var right = x >= mid;
+    if (right && x + 30 + tw > w) right = false;
+    else if (!right && x - 30 - tw < 0) right = true;
+    var lead = right ? (maxX - x) + 26 : (x - minX) + 26;
+    var room = right ? (w - x - tw - 10) : (x - tw - 10);
+    lead = clamp(lead, 28, Math.max(28, room));
+    c.classList.toggle('r', right);
+    c.classList.toggle('l', !right);
+    var ld = c.querySelector('.lead');
+    if (ld) ld.style.width = Math.round(lead) + 'px';
+    c.style.left = Math.round(clamp(x, 4, w-4)) + 'px';
+    c.style.top  = Math.round(clamp(y, 16, h-16)) + 'px';
+    c.style.transform = '';   /* konumu .l / .r sınıfı belirliyor */
   }
 }
 
