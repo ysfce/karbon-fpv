@@ -14,7 +14,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
-<body><style>
+<body><
+<style>
 /* ============================================================
    KARBON FPV — tek taahhütlü koyu dünya (gözlük feed'i).
    Her renk token'dan gelir, hiçbiri media/[data-theme] içine
@@ -2494,7 +2495,7 @@ var buildSec = el('build');
   PARTS.forEach(function(pt,i){
     var pr = PMAP[pt.pid];
     html += '<div class="panel" data-panel-i="'+(i+1)+'">'+
-      '<div class="panel-head"><span class="step-idx">ADIM '+(i+1<10?'0':'')+(i+1)+' / '+PARTS.length+'</span><span class="step-line"></span></div>'+
+      '<div class="panel-head"><span class="step-idx">ADIM '+(i+1<10?'0':'')+(i+1)+' / '+(PARTS.length<10?'0':'')+PARTS.length+'</span><span class="step-line"></span></div>'+
       '<div class="brand-line">'+esc(pr.brand)+' · '+esc(pt.sub)+'</div>'+
       '<h2 class="d-lg">'+esc(pt.title)+'</h2>'+
       '<p>'+pt.txt+'</p>'+
@@ -2675,7 +2676,7 @@ onScroll(true);
 
 <style>
 /* WebGL sahnesi devreye girince vektör yedeği kapanır */
-.scene-3d canvas{position:absolute;inset:0;display:block}
+.scene-3d canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
 .scene-3d.webgl .scene,.scene-3d.webgl .shadow-plate{display:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -3143,7 +3144,7 @@ var progress = 0, needsRender = true, inView = true;
 function resize(){
   var w = host.clientWidth, h = host.clientHeight;
   if (!w || !h) return;
-  renderer.setSize(w, h, false);
+  renderer.setSize(w, h);   /* CSS boyutunu da ayarla: HiDPI ekranda canvas taşmasın */
   camera.aspect = w/h; camera.updateProjectionMatrix();
   needsRender = true;
 }
