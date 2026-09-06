@@ -2651,8 +2651,8 @@ document.addEventListener('click', function(e){
   var propLayer = scene.querySelector('.layer[data-k="prop"]');
   if(!propLayer) return;
   var on = propLayer.classList.toggle('spinning');
+  /* geri bildirim buton yazısında; ayrıca toast göstermeye gerek yok */
   e.target.closest('#spinBtn').textContent = on ? 'Motorları durdur' : 'Motorları test et';
-  toast(on ? 'Gaz %30 — pervaneler dönüyor' : 'Motorlar durduruldu');
 });
 
 /* ilk çizim */
