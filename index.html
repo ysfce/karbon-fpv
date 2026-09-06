@@ -2317,6 +2317,7 @@ el('q').addEventListener('input', function(){
   clearTimeout(qT);
   qT = setTimeout(function(){
     state.q = v.trim();
+    if(state.q) state.cat = 'all';   /* arama tüm katalogda yapılır */
     if(state.q && location.hash.indexOf('#/urunler')!==0){ location.hash = '#/urunler'; }
     else renderCatalog();
   }, 260);
@@ -2463,12 +2464,20 @@ function route(){
     show('product'); renderPDP(h.slice(7)); window.scrollTo(0,0);
   } else if(h.indexOf('#/urunler')===0){
     var qs = h.split('?')[1] || '';
+    var gotCat = false;
     if(qs){
       qs.split('&').forEach(function(pair){
         var kv = pair.split('=');
-        if(kv[0]==='k'){ state.cat = kv[1]; state.brands=[]; state.q=''; el('q').value=''; }
+        if(kv[0]==='k'){
+          gotCat = true;
+          state.cat = decodeURIComponent(kv[1] || 'all');
+          state.brands=[]; state.q=''; el('q').value='';
+        }
       });
     }
+    /* parametresiz #/urunler = tüm ürünler; yoksa 'Hazır Kitler'e girip
+       'Ürünler'e dönünce kit filtresi takılı kalıyor */
+    if(!gotCat && !state.q){ state.cat = 'all'; }
     show('catalog'); renderCatalog(); window.scrollTo(0,0);
   } else {
     show('home');
@@ -2481,6 +2490,13 @@ function route(){
   }
 }
 window.addEventListener('hashchange', route);
+/* aynı adrese tekrar tıklamak hashchange üretmez; menü yine de sıfırlasın */
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('a[data-nav]');
+  if(!a) return;
+  var href = a.getAttribute('href') || '';
+  if(href.charAt(0) === '#' && href === location.hash) route();
+});
 
 /* ================================================================
    MONTAJ SAHNESİ — kaydırma koreografisi
