@@ -732,9 +732,10 @@ main{padding-top:calc(var(--hud-h) + 26px)}
   </div>
 
   <!-- 05 · VTX — alüminyum soğutucu, MMCX çıkış -->
-  <div class="layer" data-k="vtx" data-img="parca/05-vtx.png" style="--z:70">
+  <div class="layer" data-k="vtx" data-img="parca/05-vtx.png" style="--z:40">
     <img class="lp" alt="">
     <svg class="lv" viewBox="0 0 900 900" aria-hidden="true">
+     <g transform="translate(0,-142)">
       <ellipse cx="456" cy="466" rx="98" ry="98" fill="url(#contact)" opacity=".48"/>
       <rect x="407" y="411" width="96" height="92" rx="7" fill="#04060A"/>
       <rect x="402" y="404" width="96" height="92" rx="7" fill="url(#pcb)"/>
@@ -761,6 +762,17 @@ main{padding-top:calc(var(--hud-h) + 26px)}
       <circle cx="492" cy="490" r="2.6" fill="#FF5A1F"/>
       <text x="450" y="463" text-anchor="middle" fill="#6E7887" fill-opacity=".75"
             style="font:500 8px 'IBM Plex Mono',monospace;letter-spacing:.16em">5.8 GHz</text>
+      <g>
+        <path d="M418 404 C412 380, 404 358, 396 338" fill="none" stroke="#0A0E12" stroke-width="6" stroke-linecap="round"/>
+        <path d="M418 404 C412 380, 404 358, 396 338" fill="none" stroke="url(#wire)" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M482 404 C488 380, 496 358, 504 338" fill="none" stroke="#0A0E12" stroke-width="6" stroke-linecap="round"/>
+        <path d="M482 404 C488 380, 496 358, 504 338" fill="none" stroke="url(#wire)" stroke-width="3.4" stroke-linecap="round"/>
+        <circle cx="392" cy="326" r="13" fill="none" stroke="#0A0E12" stroke-width="7"/>
+        <circle cx="392" cy="324" r="13" fill="none" stroke="url(#anod)" stroke-width="5"/>
+        <circle cx="508" cy="326" r="13" fill="none" stroke="#0A0E12" stroke-width="7"/>
+        <circle cx="508" cy="324" r="13" fill="none" stroke="url(#anod)" stroke-width="5"/>
+      </g>
+     </g>
     </svg>
   </div>
 
@@ -802,15 +814,13 @@ main{padding-top:calc(var(--hud-h) + 26px)}
     <svg class="lv" viewBox="0 0 900 900" aria-hidden="true">
      <g transform="translate(0,900) scale(1,-1)">
       <ellipse cx="452" cy="558" rx="70" ry="42" fill="url(#contact)" opacity=".45"/>
-      <path d="M430 566 C412 594, 396 614, 378 630" fill="none" stroke="#0A0E12" stroke-width="5" stroke-linecap="round"/>
-      <path d="M430 566 C412 594, 396 614, 378 630" fill="none" stroke="url(#wire)" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M470 566 C488 594, 504 614, 522 630" fill="none" stroke="#0A0E12" stroke-width="5" stroke-linecap="round"/>
-      <path d="M470 566 C488 594, 504 614, 522 630" fill="none" stroke="url(#wire)" stroke-width="3.2" stroke-linecap="round"/>
-      <g>
-        <circle cx="372" cy="638" r="13" fill="none" stroke="#0A0E12" stroke-width="7"/>
-        <circle cx="372" cy="636" r="13" fill="none" stroke="url(#anod)" stroke-width="5"/>
-        <circle cx="528" cy="638" r="13" fill="none" stroke="#0A0E12" stroke-width="7"/>
-        <circle cx="528" cy="636" r="13" fill="none" stroke="url(#anod)" stroke-width="5"/>
+      <path d="M432 566 C426 580, 418 590, 410 597" fill="none" stroke="#0A0E12" stroke-width="4" stroke-linecap="round"/>
+      <path d="M432 566 C426 580, 418 590, 410 597" fill="none" stroke="url(#wire)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M468 566 C474 580, 482 590, 490 597" fill="none" stroke="#0A0E12" stroke-width="4" stroke-linecap="round"/>
+      <path d="M468 566 C474 580, 482 590, 490 597" fill="none" stroke="url(#wire)" stroke-width="2.2" stroke-linecap="round"/>
+      <g fill="#3A424F">
+        <rect x="404" y="594" width="9" height="9" rx="3"/>
+        <rect x="487" y="594" width="9" height="9" rx="3"/>
       </g>
       <rect x="431" y="544" width="48" height="28" rx="4" fill="#04060A"/>
       <rect x="426" y="540" width="48" height="28" rx="4" fill="url(#pcb)"/>
@@ -2239,13 +2249,13 @@ var PARTS = [
   txt:'ESC’nin üstüne standoff’larla biner. Kauçuk takozlar gyro’ya titreşim geçirmez.'},
  {k:'vtx',   rail:'VTX',    pid:'b5', title:'Video Verici',      sub:'Görüntüyü havaya çıkarır',
   specs:[['Güç','25–800 mW'],['Bant','5,8 GHz'],['Kontrol','SmartAudio']],
-  txt:'Stack’in üstüne binmez; gövdenin arkasında, hava akışına açık durur. Kanalı FC’nin OSD’sinden değiştirirsiniz.'},
+  txt:'Gövdenin arkasında, hava akışına açık durur. Çift anteni yukarı bakar ve pervane düzleminden uzak kalır; kanalı FC’nin OSD’sinden değiştirirsiniz.'},
  {k:'cam',   rail:'KAMERA', pid:'b6', title:'Kamera',            sub:'Pilotun tek gözü',
   specs:[['Çözünürlük','1200TVL'],['Lens','1,8 mm'],['Yuva','19×19 mm']],
   txt:'Öne, iki plaka arasına 25–35° açıyla girer. Açı ne kadar dik, o kadar hızlı uçarsınız.'},
- {k:'rx',    rail:'ALICI',  pid:'b7', title:'Alıcı & Anten',     sub:'Kumandayla bağ',
+ {k:'rx',    rail:'ALICI',  pid:'b7', title:'Alıcı',             sub:'Kumandayla bağ',
   specs:[['Protokol','ELRS 2,4G'],['Çıkış','CRSF'],['Ağırlık','0,4 g']],
-  txt:'Antenler gövdenin arkasından 45° dışa bakar; karbon araya girerse sinyal düşer.'},
+  txt:'Anteni kısacık bir koakstır; karbonun altında kalmayacak şekilde dışa bakan bir açıyla sabitlenir, yoksa menzil düşer.'},
  {k:'prop',  rail:'PERVANE',pid:'b8', title:'Pervaneler',        sub:'Son montaj',
   specs:[['Çap','5 inç'],['Hatve','4,3'],['Kanat','3']],
   txt:'İki CW, iki CCW. Motor yönünü Betaflight’ta doğrulamadan pervane takmayın.'},
@@ -3416,6 +3426,17 @@ function makeVtx(){
   for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
     var h = cyl(1.5,1.5,2,10,M.dark); h.position.set(sx*STACK*.98, .7, sz*STACK*.98); g.add(h);
   }
+  /* çift anten vericinin üstünde durur ve yukarı bakar (DJI O4, analog lolipop) */
+  for (var s=-1; s<=1; s+=2){
+    var ant = new THREE.Group();
+    var boot = cyl(1.9,1.9,5,10,M.aluDark); boot.position.y = 3;  ant.add(boot);
+    var rod  = cyl(1.1,1.1,26,10,M.wire);   rod.position.y = 15;  ant.add(rod);
+    var loop = new THREE.Mesh(new THREE.TorusGeometry(5.5,1.3,10,26), M.anod);
+    loop.position.y = 32; loop.castShadow = true; ant.add(loop);
+    ant.position.set(s*11, 2, 4);
+    ant.rotation.z = rad(-s*18); ant.rotation.x = rad(14);
+    g.add(ant);
+  }
   /* VTX stack'in üstüne binmez; gövdenin arkasına, hava akışına açık yere oturur */
   g.position.set(0, 9, 34);
   return g;
@@ -3444,14 +3465,14 @@ function makeRx(){
   var b = slab(roundRect(22,11,1.5), 1.2, M.pcb); g.add(b);
   var chip = box(5,1,4,M.chip); chip.position.set(-6,1.6,0); g.add(chip);
   var led = cyl(.8,.8,.5,8,M.teal); led.position.set(6,1.4,3); g.add(led);
+  /* ELRS alıcı anteni kısa ve incedir: ~15 mm koaks, ucunda küçük makaron.
+     Yukarı bakan büyük lolipoplar alıcıda değil, video vericide durur. */
   for (var s=-1; s<=1; s+=2){
     var ant = new THREE.Group();
-    var rod = cyl(.8,.8,30,10,M.wire); rod.position.y = 15; ant.add(rod);
-    var loop = new THREE.Mesh(new THREE.TorusGeometry(5,1.2,10,26), M.anod);
-    loop.position.y = 34; loop.castShadow = true; ant.add(loop);
-    ant.position.set(s*8, 1, 4);
-    /* önce geriye, kapağın arka kenarını geçtikten sonra yukarı */
-    ant.rotation.z = rad(-s*26); ant.rotation.x = rad(70);
+    var rod = cyl(.5,.5,15,8,M.wire);      rod.position.y = 7.5; ant.add(rod);
+    var tip = cyl(1.1,1.1,4.5,8,M.aluDark); tip.position.y = 16.5; ant.add(tip);
+    ant.position.set(s*7, 1, 4);
+    ant.rotation.z = rad(-s*30); ant.rotation.x = rad(70);
     g.add(ant);
   }
   g.position.set(0, 28, 11);
@@ -3609,8 +3630,8 @@ var WIN = 0.075;
 var callouts = document.querySelectorAll('#callouts .callout');
 var ANCHOR = [
   new THREE.Vector3(-95, 4, 60),  new THREE.Vector3(80, 26, -80), new THREE.Vector3(-20, 8, 20),
-  new THREE.Vector3(22, 20, 8),   new THREE.Vector3(0, 14, -34),   new THREE.Vector3(0, 20, 52),
-  new THREE.Vector3(0, 42, -34),  new THREE.Vector3(84, 33, 76),  new THREE.Vector3(0, 58, 0)
+  new THREE.Vector3(22, 20, 8),   new THREE.Vector3(0, 30, -42),   new THREE.Vector3(0, 20, 52),
+  new THREE.Vector3(0, 30, -12),  new THREE.Vector3(84, 33, 76),  new THREE.Vector3(0, 58, 0)
 ];
 
 var spinning = false, spinAngle = 0, lastT = 0;
