@@ -19,6 +19,7 @@ Aynı site iki farklı montaj sahnesiyle duruyor; ikisi de tek dosya, ikisi de a
 ## Ne var
 
 - **Kaydırmalı 3D montaj sahnesi** — ana sayfada pinlenmiş bir WebGL sahnesinde quad adım adım kuruluyor: gövde → motorlar → ESC → uçuş kontrol → VTX → kamera → alıcı & anten → pervaneler → kapak ve batarya. Son adım iki hareketli: gövdenin üst kapağı standoff'lara iner, batarya da onun üstüne oturur (kapak ayrı bir kalem değil, gövde kitinin parçası). Sağdaki montaj listesi doldukça kalkış ağırlığı (AUW) ve sepet toplamı canlı olarak akıyor. En sonda kataloğa giden buton ve "bu build'i sepete ekle" seçeneği var.
+- **Yapılandırıcı** (`#/yapilandir`) — sınıf seçilir (5" freestyle / 5" yarış / 7" long range), dokuz yuva sırayla doldurulur. Her seçimde parçalar ikişerli denetlenir ve uyumsuzluğun **nedeni** yazılır: montaj deseni (20×20 / 25,5×25,5 / 30,5×30,5), pervane çapı, hücre sayısı, ESC akım payı (%25 kuralı), dijital VTX + ayrı kamera çakışması. Kalkış ağırlığı ve tutar anlık birikir, sınıfın tipik aralığı aşılırsa uyarır; liste tek tıkla sepete eklenir. Seçimler `localStorage`'da saklanır.
 - **Katalog** — 12 kategori, filtre rayı (kategori, marka, boyut, hücre, stack montaj deseni, stok), sıralama, aktif filtre çipleri, arama.
 - **Ürün sayfası** — varyant seçimi, adet, teknik özellik tablosu, uyumluluk listesi, kargo/iade sekmesi, uyumlu ürün önerileri.
 - **Sepet çekmecesi** — adet güncelleme, ücretsiz kargo ilerleme çubuğu, `localStorage` ile kalıcılık.
