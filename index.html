@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788706932";
+  var V = "1788708094";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -982,7 +982,6 @@ main{padding-top:calc(var(--hud-h) + 26px)}
         <div class="m-total">
           <div class="t-row"><span class="t-k">Kalkış ağırlığı</span><span class="t-v auw num" id="mAuw">0 g</span></div>
           <div class="auw-bar"><i id="mBar"></i></div>
-          <div class="t-row"><span class="t-k">Sepet toplamı</span><span class="t-v try num" id="mTry">₺0</span></div>
         </div>
       </aside>
 
@@ -2282,7 +2281,7 @@ var PARTS = [
  {k:'frame', rail:'GÖVDE',  pid:'b1', title:'Gövde',            sub:'Her şey buradan başlar',
   specs:[['Köşegen','226 mm'],['Kol','7 mm T700'],['Stack','30,5×30,5 mm']],
   txt:'Pervane çapı gövdeyi, gövde de stack desenini belirler. 7 mm kollar sert inişte bükülmez.'},
- {k:'motor', rail:'MOTOR',  pid:'b2', title:'Motorlar',          sub:'Dört köşeye itki',
+ {k:'motor', rail:'MOTOR',  pid:'b2', title:'Motorlar',          sub:'Dört köşeye itki', unit:'4 adet',
   specs:[['Stator','2207'],['KV','1750 (6S)'],['Tepe akım','42 A']],
   txt:'2207 stator ve 1750KV, 6S ile 5 inç pervanede dengeli tork verir. Dört motor 132 g.'},
  {k:'esc',   rail:'ESC',    pid:'b3', title:'ESC',               sub:'Dördü bir arada',
@@ -2300,7 +2299,7 @@ var PARTS = [
  {k:'rx',    rail:'ALICI',  pid:'b7', title:'Alıcı',             sub:'Kumandayla bağ',
   specs:[['Protokol','ELRS 2,4G'],['Çıkış','CRSF'],['Ağırlık','0,4 g']],
   txt:'Anteni kısacık bir koakstır; karbonun altında kalmayacak şekilde dışa bakan bir açıyla sabitlenir, yoksa menzil düşer.'},
- {k:'prop',  rail:'PERVANE',pid:'b8', title:'Pervaneler',        sub:'Son montaj',
+ {k:'prop',  rail:'PERVANE',pid:'b8', title:'Pervaneler',        sub:'Son montaj', unit:'4 adet',
   specs:[['Çap','5 inç'],['Hatve','4,3'],['Kanat','3']],
   txt:'İki CW, iki CCW. Motor yönünü Betaflight’ta doğrulamadan pervane takmayın.'},
  {k:'lipo',  rail:'LİPO',   pid:'b9', title:'Batarya',           sub:'Kalkışa hazır',
@@ -2720,7 +2719,6 @@ document.addEventListener('click', function(e){
   if(a){ e.preventDefault(); addToCart(a.getAttribute('data-add'), '', 1); return; }
   var k = e.target.closest('[data-kit]');
   if(k){ addKit(k.getAttribute('data-kit')); return; }
-  if(e.target.closest('#buildAdd')){ addBuild(); return; }
 });
 
 el('newsForm').addEventListener('submit', function(e){
@@ -3041,25 +3039,24 @@ var buildSec = el('build');
     var pr = PMAP[pt.pid];
     html += '<div class="panel" data-panel-i="'+(i+1)+'">'+
       '<div class="panel-head"><span class="step-idx">ADIM '+(i+1<10?'0':'')+(i+1)+' / '+(PARTS.length<10?'0':'')+PARTS.length+'</span><span class="step-line"></span></div>'+
-      '<div class="brand-line">'+esc(pr.brand)+' · '+esc(pt.sub)+'</div>'+
+      '<div class="brand-line">'+esc(pt.sub)+'</div>'+
       '<h2 class="d-lg">'+esc(pt.title)+'</h2>'+
       '<p>'+pt.txt+'</p>'+
       '<div class="spec-list">'+pt.specs.map(function(s){
         return '<div><span class="k">'+esc(s[0])+'</span><span class="v">'+esc(s[1])+'</span></div>';
       }).join('')+'</div>'+
-      '<div class="panel-foot"><span class="chip chip-d">'+pr.w+' g</span><span class="chip">'+TRY(pr.price)+'</span>'+
-      '<a class="btn btn-ghost btn-sm" href="#/urun/'+pr.id+'" data-nav>Parçayı gör</a>'+
-      '<button class="btn btn-primary btn-sm" data-add="'+pr.id+'">Sepete ekle</button></div></div>';
+      '<div class="panel-foot"><span class="chip chip-d">'+pr.w+' g</span>'+
+      '<span class="chip">'+esc(pt.unit || 'tek parça')+'</span></div></div>';
   });
   html += '<div class="panel finale" data-panel-i="10">'+
     '<div class="panel-head"><span class="step-idx">MONTAJ TAMAM</span><span class="step-line"></span></div>'+
     '<h2 class="d-lg">Uçmaya hazır.</h2>'+
     '<div class="big"><div><span class="tag">Kalkış ağırlığı</span><span class="v" style="color:var(--data)">'+TOTAL_W+' g</span></div>'+
-    '<div><span class="tag">'+PARTS.length+' parça</span><span class="v">'+TRY(TOTAL_P)+'</span></div></div>'+
-    '<p>6S 1400 mAh ile yaklaşık 4,5 dakika freestyle. Aynı parçaları tek tek seçebilir ya da hepsini birlikte alabilirsiniz.</p>'+
-    '<div class="cta"><a class="btn btn-primary btn-lg" href="#/urunler" data-nav>Tüm ürünlere git'+
+    '<div><span class="tag">Parça</span><span class="v">'+PARTS.length+'</span></div></div>'+
+    '<p>Bir quad’ın tamamı bu dokuz parçadan ibaret. Hepsi kurulmuş hâliyle gelsin isterseniz, sınıfına göre seçilmiş hazır konfigürasyonlarımız var.</p>'+
+    '<div class="cta"><a class="btn btn-primary btn-lg" href="#/urunler?k=kit" data-nav>Hazır konfigürasyonlar'+
       '<svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>'+
-      '<button class="btn btn-ghost" id="buildAdd">Bu build’i sepete ekle — '+TRY(TOTAL_P)+'</button>'+
+      '<a class="btn btn-ghost" href="#/yapilandir" data-nav>Kendim yapılandırayım</a>'+
       '<button class="btn btn-ghost btn-sm" id="spinBtn">Motorları test et</button></div></div>';
   wrap.insertAdjacentHTML('beforeend', html);
   panels = [el('opener')].concat(Array.prototype.slice.call(wrap.querySelectorAll('.panel')));
@@ -3152,7 +3149,6 @@ function onScroll(force){
 
     /* montaj listesi toplamları */
     el('mAuw').textContent = Math.round(wSum) + ' g';
-    el('mTry').textContent = TRY(pSum);
     el('mCount').textContent = done + '/' + PARTS.length;
     el('mBar').style.width = clamp(wSum/TOTAL_W,0,1)*100 + '%';
 
@@ -3189,19 +3185,31 @@ onScroll(true);
 </script>
 <style>
 /* ---- parça modelinden üretilen ürün görselleri ---- */
-.tk{display:grid;place-items:center;width:100%;height:100%}
-.tk-img{display:block;object-fit:contain;transition:transform var(--d-in) var(--e-in)}
-.card .thumb .tk-img{width:88%;height:88%}
-.card:hover .thumb .tk-img{transform:scale(1.06)}
-.cat .art .tk-img{width:100%;height:100%}
-.cat:hover .art .tk-img{transform:scale(1.07) rotate(-3deg)}
-.kit .art .tk-img{width:112%;height:112%}
-.gal .main .tk{position:relative}
-.gal .main .tk-img{width:82%;height:82%}
-.gal .thumbs .tk-img{width:84%;height:84%}
-.gal .thumbs .pimg{width:88%;height:88%;object-fit:contain}
-.ci .th .tk-img{width:94%;height:94%}
-.opt-art .tk-img{width:96%;height:96%}
+/* Kapsayicinin izgara satiri icerikten boyutlaniyordu; goruntunun dogal
+   olcusu (320 px) satiri buyutup yuzde olculeri yanlis tabana oturtuyordu.
+   Yuvayi akistan cikarip kutuya sabitliyoruz. */
+/* Görselin kutusu ızgara hücresinden değil, kutunun kendisinden gelmeli.
+   Yüzde ölçü içerikten boyutlanan satıra çözülüp render'ı doğal boyutuna
+   (300 px) şişiriyordu. Boşluk .tk kutusuna veriliyor, görsel onu birebir
+   dolduruyor: inset tek başına yetmez, değiştirilmiş öğe doğal boyutuna döner. */
+.tk{position:absolute;inset:0}
+.card .thumb,.cat .art,.kit .art,.gal .main,.gal .thumbs button,.ci .th,.opt-art{position:relative}
+.cat .art,.kit .art{overflow:hidden}
+/* kategori kutusunda ad ve adet ayrı satırlarda olmalı */
+.cat .n,.cat .c{display:block}
+.tk-img,.tk svg{
+  position:absolute;left:0;top:0;width:100%;height:100%;
+  object-fit:contain;transition:transform var(--d-in) var(--e-in)
+}
+.card .thumb .tk{inset:7%}
+.card:hover .thumb .tk{transform:scale(1.06)}
+.cat .art .tk{inset:2% 0}
+.cat:hover .art .tk{transform:scale(1.07) rotate(-3deg)}
+.kit .art .tk{inset:-6%}
+.gal .main .tk{inset:9%}
+.gal .thumbs .tk{inset:8%}
+.ci .th .tk{inset:4%}
+.opt-art .tk{inset:2%}
 @media (prefers-reduced-motion:reduce){
   .card:hover .thumb .tk-img,.cat:hover .art .tk-img{transform:none}
 }
@@ -3488,12 +3496,7 @@ var M = {
   wire:     new THREE.MeshStandardMaterial({color:0x2b323b, roughness:.72, metalness:.1}),
   carbonTex:new THREE.MeshPhysicalMaterial({map:texCarbon(), color:0xffffff, roughness:.44, metalness:.18,
               clearcoat:.6, clearcoatRoughness:.3, envMapIntensity:.32}),
-  bellSide: new THREE.MeshStandardMaterial({map:texBell(), roughness:.3, metalness:.8, envMapIntensity:.6}),
   bellCap:  new THREE.MeshStandardMaterial({color:0x4b525b, roughnessMap:texBrushed(), roughness:.5, metalness:.95, envMapIntensity:.7}),
-  lipoLabel:new THREE.MeshStandardMaterial({map:texLipo(), roughness:.55, metalness:.05, envMapIntensity:.3}),
-  silkFc:   new THREE.MeshStandardMaterial({map:texPCB('fc'),  roughness:.62, metalness:.05, envMapIntensity:.35}),
-  silkEsc:  new THREE.MeshStandardMaterial({map:texPCB('esc'), roughness:.62, metalness:.05, envMapIntensity:.35}),
-  silkVtx:  new THREE.MeshStandardMaterial({map:texPCB('vtx'), roughness:.62, metalness:.05, envMapIntensity:.35}),
   copper:   new THREE.MeshStandardMaterial({color:0xb2702c, roughness:.42, metalness:.9, envMapIntensity:.6}),
   magnet:   new THREE.MeshStandardMaterial({color:0x14171b, roughness:.55, metalness:.4, envMapIntensity:.3}),
   /* --- referans fotoğraflarından alınan tonlar --- */
@@ -3501,17 +3504,17 @@ var M = {
   bellLip:  new THREE.MeshStandardMaterial({color:0x59606a, roughness:.34, metalness:.95, envMapIntensity:.7}),
   steel:    new THREE.MeshStandardMaterial({color:0xc3c8ce, roughness:.26, metalness:1}),
   aluBright:new THREE.MeshStandardMaterial({color:0xb6c0ca, roughness:.24, metalness:1}),
-  tpu:      new THREE.MeshStandardMaterial({color:0xc9e63a, roughness:.62, metalness:0, envMapIntensity:.5}),
-  grommet:  new THREE.MeshStandardMaterial({color:0xe8c022, roughness:.78, metalness:0, envMapIntensity:.5}),
-  wrapSilver:new THREE.MeshStandardMaterial({color:0x6d747c, roughness:.44, metalness:.38, envMapIntensity:.24}),
-  wrapRidge:new THREE.MeshStandardMaterial({color:0x565c63, roughness:.5, metalness:.28, envMapIntensity:.22}),
+  tpu:      new THREE.MeshStandardMaterial({color:0xff5a1f, roughness:.62, metalness:0, envMapIntensity:.5}),
+  grommet:  new THREE.MeshStandardMaterial({color:0xff5a1f, roughness:.78, metalness:0, envMapIntensity:.5}),
+  wrapSilver:new THREE.MeshStandardMaterial({color:0x1b2129, roughness:.5, metalness:.2, envMapIntensity:.28}),
+  wrapRidge:new THREE.MeshStandardMaterial({color:0x252c35, roughness:.55, metalness:.18, envMapIntensity:.2}),
   label:    new THREE.MeshStandardMaterial({color:0xd4b41c, roughness:.55, metalness:.05, envMapIntensity:.3}),
   wireRed:  new THREE.MeshStandardMaterial({color:0xb4241e, roughness:.55, metalness:.05, envMapIntensity:.4}),
   plugWhite:new THREE.MeshStandardMaterial({color:0xd6d9dc, roughness:.6,  metalness:0,  envMapIntensity:.4}),
   camBody:  new THREE.MeshStandardMaterial({color:0x1c1f24, roughness:.55, metalness:.1, envMapIntensity:.4}),
   propSeam: new THREE.MeshStandardMaterial({color:0x2c3138, roughness:.6, metalness:.04, envMapIntensity:.3}),
-  prop:     new THREE.MeshStandardMaterial({color:0x16191e, roughness:.44, metalness:.05, envMapIntensity:.35,
-              side:THREE.DoubleSide}),
+  prop:     new THREE.MeshStandardMaterial({color:0x6b7684, roughness:.22, metalness:.05, envMapIntensity:.5,
+              transparent:true, opacity:.48, side:THREE.DoubleSide}),
   teal:     new THREE.MeshStandardMaterial({color:0x3fe0bf, roughness:.4, metalness:.2,
               emissive:0x1c6b5c, emissiveIntensity:.6})
 };
@@ -3523,7 +3526,7 @@ M.ribbon.forEach(function(m, i){ M['ribbon' + i] = m; });
 
 /* r134 hex renkleri doğrusal sayar, çıkışta gama uygular; renkleri önceden
    sRGB -> doğrusala çevirmezsek her yüzey soluk griye kaçar. */
-var TEXTURED = {carbonTex:1, bellSide:1, lipoLabel:1, silkFc:1, silkEsc:1, silkVtx:1};
+var TEXTURED = {carbonTex:1};
 Object.keys(M).forEach(function(k){
   if (k === 'ribbon' || TEXTURED[k]) return;   /* haritalı malzemede renk beyaz kalır */
   if (M[k].color)    M[k].color.convertSRGBToLinear();
@@ -3677,9 +3680,10 @@ function makeMotor(){
     new THREE.Vector2(13.95, 9.4), new THREE.Vector2(13.55, 10.6),
     new THREE.Vector2(12.4, 11.2)
   ];
-  var bell = new THREE.Mesh(new THREE.LatheGeometry(prof, 44), M.bellSide);
-  bell.position.y = 12.6; bell.rotation.y = rad(126);
+  var bell = new THREE.Mesh(new THREE.LatheGeometry(prof, 44), M.bell);
+  bell.position.y = 12.6;
   bell.castShadow = bell.receiveShadow = true; m.add(bell);
+  var ring = cyl(14.05, 14.05, 2, 44, M.anod); ring.position.y = 22.4; m.add(ring);
   /* açık örümcek kapak: kol düzleme yatırılır, ayrı pivotla döndürülür */
   var hub = cyl(5.1,5.4,3.6,26,M.bellCap); hub.position.y = 24.4; m.add(hub);
   var rim = new THREE.Mesh(new THREE.TorusGeometry(12.5,1.35,10,44), M.bellCap);
@@ -3756,7 +3760,6 @@ function boardBase(size, y, mat){
 /* ================= 03 · ESC (BLS 55A) ================= */
 function makeEsc(){
   var g = boardBase(38, 6);
-  var silk = box(35, .12, 35, M.silkEsc); silk.position.y = 1.68; g.add(silk);
   for (var sx = -1; sx <= 1; sx += 2) for (var sz = -1; sz <= 1; sz += 2){
     var fet = box(8, 1.8, 7, M.chip); fet.position.set(sx*9, 2.5, sz*8.5); g.add(fet);
   }
@@ -3775,7 +3778,6 @@ function makeEsc(){
 /* ================= 04 · UÇUŞ KONTROL KARTI (F405 V4) ================= */
 function makeFc(){
   var g = boardBase(36, 16);
-  var silk = box(33, .12, 33, M.silkFc); silk.position.y = 1.68; g.add(silk);
   var mcu  = box(9, 1.5, 9, M.chip);  mcu.position.set(2, 2.4, 1); g.add(mcu);
   var gyro = box(4.5, 1, 4.5, M.chip); gyro.position.set(-9, 2.1, -6); g.add(gyro);
   var usb  = box(9, 3.2, 7, M.aluBright); usb.position.set(6, 2.5, -17); g.add(usb);
@@ -3799,7 +3801,6 @@ function makeFc(){
 function makeVtx(){
   var g = new THREE.Group();
   var b = slab(roundRect(30, 30, 3), 1.4, M.pcb); g.add(b);
-  var silk = box(27, .12, 27, M.silkVtx); silk.position.y = 1.48; g.add(silk);
   var shell = box(26, 6, 22, M.aluDark); shell.position.set(0, 4.4, -1); g.add(shell);
   for (var i = 0; i < 7; i++){
     var fin = box(1.2, 3.2, 20, M.alu); fin.position.set(-10.5 + i*3.5, 8.6, -1); g.add(fin);
@@ -3960,8 +3961,7 @@ function makePack(){
     var ridge = box(.9, 38, 76, M.wrapRidge);
     ridge.position.set(-15 + i * 7.5, 58, 0); g.add(ridge);
   }
-  /* etiket: kutu geometrisi 0..1 UV verdiği için yazı düzgün oturur */
-  var band = box(39.3, 19, 66, M.lipoLabel); band.position.y = 58; g.add(band);
+  var band = box(39.2, 17, 66, M.anod); band.position.y = 58; g.add(band);
   var barcode = box(.6, 10, 26, M.wrapRidge); barcode.position.set(19.2, 50, 14); g.add(barcode);
   for (var s = -1; s <= 1; s += 2){
     var st = box(41, 42, 4.5, M.strap); st.position.set(0, 56, s*24); g.add(st);
@@ -4171,7 +4171,7 @@ key.shadow.camera.near = 60; key.shadow.camera.far = 700;
 key.shadow.bias = -0.0012; key.shadow.normalBias = .6;
 scene.add(key);
 var fill = new THREE.DirectionalLight(0x8fb0d8, .75); fill.color.convertSRGBToLinear(); fill.position.set(210, 90, -60); scene.add(fill);
-var rim  = new THREE.DirectionalLight(0x9ab4d8, .9); rim.color.convertSRGBToLinear(); rim.position.set(40, -30, -230); scene.add(rim);
+var rim  = new THREE.DirectionalLight(0xffa06a, .85); rim.color.convertSRGBToLinear(); rim.position.set(40, -30, -230); scene.add(rim);
 var hemi = new THREE.HemisphereLight(0x334051, 0x05070a, .55); hemi.color.convertSRGBToLinear(); hemi.groundColor.convertSRGBToLinear(); scene.add(hemi);
 
 /* ================= kaydırma koreografisi ================= */
