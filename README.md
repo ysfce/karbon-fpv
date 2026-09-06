@@ -20,6 +20,26 @@ FPV yarış ve freestyle drone parçaları satan bir e-ticaret sitesi için aray
 - Tüm görseller inline SVG — hiçbir resim dosyası yok, sayfa tek istekte yükleniyor.
 - `prefers-reduced-motion`, `prefers-reduced-transparency` ve `prefers-contrast` desteklenir; JavaScript kapalıyken de tüm içerik görünür kalır.
 
+## Gerçek fotoğraf ekleme
+
+Montaj sahnesindeki dokuz parça, kod değişikliği gerektirmeden gerçek fotoğrafla değiştirilebilir. Depoda `parca/` klasörü açıp dosyaları şu adlarla koyun; sayfa dosyayı bulursa vektör çizimin yerine fotoğrafı kullanır, bulamazsa sessizce çizimde kalır:
+
+```
+parca/01-govde.png     parca/04-fc.png      parca/07-alici.png
+parca/02-motor.png     parca/05-vtx.png     parca/08-pervane.png
+parca/03-esc.png       parca/06-kamera.png  parca/09-batarya.png
+```
+
+Fotoğrafların katman hâlinde üst üste binmesi için üç kural önemli:
+
+1. **Tam tepeden çekim.** Kamera parçanın tam dikine bakmalı; perspektifli çekimler katmanlar üst üste gelince kaymış görünür.
+2. **Şeffaf arka plan, 1600×1600 px kare PNG.** Parça karenin ortasında, kenarlarda yaklaşık %8 boşluk.
+3. **Ortak ölçek.** Dokuz fotoğrafın hepsi *aynı* mm/piksel oranıyla kırpılmalı — yani 226 mm'lik gövde kareyi doldururken 36 mm'lik FC kareye göre küçük kalmalı. Aksi hâlde FC gövdeden büyük görünür.
+
+Motor ve pervanede tek parçanın fotoğrafını değil, dördünün doğru köşelere yerleştirildiği tek bir kare hazırlayın (gövde fotoğrafını şablon olarak kullanabilirsiniz).
+
+Ürün kartları ve ürün sayfası için de aynı mantık var: `index.html` içindeki `P` dizisinde bir ürüne `img:'foto/b2.jpg'` alanı eklerseniz kartta ve galeride o fotoğraf görünür, eklemezseniz kategori ikonu kullanılır.
+
 ## Shopify eşlemesi
 
 Prototip bir Shopify temasına şu şekilde taşınır:
