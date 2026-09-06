@@ -25,6 +25,14 @@ Aynı site iki farklı montaj sahnesiyle duruyor; ikisi de tek dosya, ikisi de a
 - **Sepet çekmecesi** — adet güncelleme, ücretsiz kargo ilerleme çubuğu, `localStorage` ile kalıcılık.
 - **Rehber** — sınıf/pervane/motor/KV/batarya/AUW uyumluluk tablosu ve üç adımlı build sırası.
 
+## Ürün görselleri
+
+Katalog kartları, kategori ızgarası, sepet, yapılandırıcı seçenekleri ve ürün sayfası düz ikon kullanmıyor: hepsi **aynı parça modellerinden render**. Ayrı bir `WebGLRenderer` her kategori için bir kez çiziyor, sonuç data URL olarak önbelleğe alınıyor (54 kart için ~13 render). Ürün sayfasında galeri dört farklı açıdan (3/4 · yandan · üstten · arkadan) render edilir; küçük görsele tıklayınca büyük görsel o açıya döner.
+
+Sıra şu: gerçek fotoğraf (`p.img`) → parça modelinden render → SVG ikon. WebGL yoksa ya da bir kategorinin modeli yoksa sessizce ikona düşer.
+
+Thumbnail'ların kendi ışık düzeni var — sahnedeki soğuk anahtar ışık kart boyutunda parçayı okunmaz yapıyordu.
+
 ## 3D modeller
 
 Parçalar hazır model dosyası değil, `index.html` içinde Three.js (r134, cdnjs'ten) ile **kodla, milimetre ölçeğinde** kuruluyor — 1 birim = 1 mm, Y ekseni yukarı. Ölçüler gerçek parçalardan alındı:

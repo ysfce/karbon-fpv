@@ -31,7 +31,7 @@
   --text:#EDF0F4;
   --text-2:#B3BDCB;
   --muted:#8A94A4;
-  --dim:#5D6674;
+  --dim:#7A8494;          /* koyu yüzeyde 4,7:1 — WCAG AA küçük metin */
   --accent:#FF5A1F;
   --accent-ink:#140700;
   --accent-soft:rgba(255,90,31,.13);
@@ -45,6 +45,16 @@
   --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",monospace;
 
+  /* 1.25 modüler ölçek — 1rem tabanlı */
+  --t-xs:.64rem;  --t-sm:.8rem;   --t-md:1rem;     --t-lg:1.25rem;
+  --t-xl:1.563rem; --t-2xl:1.953rem; --t-3xl:2.441rem; --t-4xl:3.052rem;
+  /* bölüm nefesi üç kademe: her bölüm aynı boşlukla bitmesin */
+  --sec-tight:clamp(40px,5vh,64px);
+  --sec:clamp(56px,8vh,104px);
+  --sec-loose:clamp(76px,11vh,144px);
+  --e-in:cubic-bezier(.2,.7,.3,1);      /* giriş / yer değiştirme */
+  --e-state:cubic-bezier(.4,0,.2,1);    /* durum değişimi */
+  --d-in:220ms; --d-state:140ms;
   --r-sm:3px; --r-md:6px; --r-lg:10px;
   --pad:clamp(16px,4vw,40px);
   --maxw:1360px;
@@ -74,11 +84,11 @@ img,svg{display:block;max-width:100%}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
 /* --- tipografi rolleri: tracking boyuta göre, sabit değil --- */
-.d-xl{font-size:clamp(2.5rem,5.6vw,4.7rem);line-height:.96;letter-spacing:-.032em;font-variation-settings:"wdth" 116;font-weight:800}
-.d-lg{font-size:clamp(1.85rem,3.2vw,2.9rem);line-height:1.04;letter-spacing:-.022em;font-variation-settings:"wdth" 114;font-weight:700}
-.d-md{font-size:clamp(1.3rem,1.7vw,1.6rem);line-height:1.14;letter-spacing:-.014em;font-variation-settings:"wdth" 112;font-weight:700}
-.d-sm{font-size:1.05rem;line-height:1.24;letter-spacing:-.008em;font-variation-settings:"wdth" 110;font-weight:600}
-.lede{font-size:clamp(1rem,1.15vw,1.13rem);line-height:1.6;color:var(--text-2);max-width:62ch}
+.d-xl{font-size:clamp(var(--t-4xl),5.6vw,4.768rem);line-height:.96;letter-spacing:-.032em;font-variation-settings:"wdth" 116;font-weight:800}
+.d-lg{font-size:clamp(var(--t-2xl),3.2vw,var(--t-3xl));line-height:1.04;letter-spacing:-.022em;font-variation-settings:"wdth" 114;font-weight:700}
+.d-md{font-size:var(--t-lg);line-height:1.14;letter-spacing:-.014em;font-variation-settings:"wdth" 112;font-weight:700}
+.d-sm{font-size:var(--t-md);line-height:1.24;letter-spacing:-.008em;font-variation-settings:"wdth" 110;font-weight:600}
+.lede{font-size:var(--t-md);line-height:1.6;color:var(--text-2);max-width:62ch}
 .body-2{color:var(--text-2)}
 .tag{
   font:500 .68rem/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)
@@ -122,7 +132,7 @@ img,svg{display:block;max-width:100%}
 .nav a::after{
   content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
   background:var(--accent);transform:scaleX(0);transform-origin:left;
-  transition:transform .18s cubic-bezier(.2,.7,.3,1)
+  transition:transform var(--d-in) var(--e-in)
 }
 .nav a:hover{color:var(--text)}
 .nav a:hover::after,.nav a[aria-current="page"]::after{transform:scaleX(1)}
@@ -169,7 +179,7 @@ main{padding-top:calc(var(--hud-h) + 26px)}
   height:46px;padding:0 22px;border-radius:var(--r-md);
   font:600 .875rem/1 var(--f-body);letter-spacing:.005em;
   border:1px solid transparent;white-space:nowrap;
-  transition:transform .1s ease-out,background .15s ease,border-color .15s ease,color .15s ease
+  transition:transform var(--d-state) var(--e-state),background var(--d-state) var(--e-state),border-color var(--d-state) var(--e-state),color var(--d-state) var(--e-state)
 }
 .btn:active{transform:scale(.975)}
 .btn-primary{background:var(--accent);color:var(--accent-ink)}
@@ -956,7 +966,9 @@ main{padding-top:calc(var(--hud-h) + 26px)}
 
 <style>
 /* ============================ bölüm iskeleti ============================ */
-.sec{padding:clamp(56px,8vh,110px) 0;position:relative}
+.sec{padding:var(--sec-pad,var(--sec)) 0;position:relative}
+.sec-tight{--sec-pad:var(--sec-tight)}
+.sec-loose{--sec-pad:var(--sec-loose)}
 .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(26px,4vh,44px)}
 .sec-head .t{max-width:56ch}
 .sec-head .tag{display:block;margin-bottom:12px}
@@ -1019,15 +1031,16 @@ table.spec tbody th{
 table.spec tbody tr:hover td,table.spec tbody tr:hover th{background:var(--raise)}
 table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-bottom:0}
 .tbl-note{font-size:.82rem;color:var(--dim);margin-top:10px}
-.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
-.steps3 li{background:var(--ink);padding:22px 20px;display:grid;gap:8px;align-content:start}
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px 40px}
+.steps3 li{padding:2px 0 2px 18px;border-left:2px solid var(--accent-line);display:grid;gap:8px;align-content:start}
 .steps3 .no{font:600 .7rem/1 var(--f-mono);letter-spacing:.14em;color:var(--accent)}
 .steps3 .n{font-family:var(--f-disp);font-weight:700;font-size:1.02rem;font-variation-settings:"wdth" 110}
 .steps3 p{font-size:.88rem;color:var(--muted)}
 
 /* ============================ güven bandı ============================ */
-.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line-soft)}
-.trust div{background:var(--ink);padding:20px;display:flex;gap:13px;align-items:flex-start}
+/* hairline kutucuk yerine tipografik liste — her bölüm aynı kutuya benzemesin */
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px 40px}
+.trust div{display:flex;gap:13px;align-items:flex-start}
 .trust svg{width:19px;height:19px;stroke:var(--accent);fill:none;stroke-width:1.6;flex:0 0 auto;margin-top:2px}
 .trust .n{font-weight:600;font-size:.9rem;margin-bottom:3px}
 .trust p{font-size:.81rem;color:var(--muted);line-height:1.5}
@@ -1074,10 +1087,17 @@ table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-botto
 .clear-all{font:500 .72rem/1 var(--f-mono);letter-spacing:.08em;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 .clear-all:hover{color:var(--text)}
 
-.grid-p{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.grid-p{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:1px;
+  background:var(--line-soft);border:1px solid var(--line-soft);grid-auto-flow:dense}
+/* filtresiz varsayılan listede ilk ürün iki kat yer kaplar — 54 eşit kart yerine bir giriş noktası */
+.grid-p.has-hero .card.hero{grid-column:span 2;grid-row:span 2}
+.grid-p.has-hero .card.hero .thumb{aspect-ratio:auto;flex:1;min-height:210px}
+.grid-p.has-hero .card.hero .name{font-size:var(--t-lg);-webkit-line-clamp:3}
+.grid-p.has-hero .card.hero .price{font-size:var(--t-lg)}
+@media (max-width:640px){.grid-p.has-hero .card.hero{grid-column:span 1;grid-row:span 1}}
 .card{
   background:var(--ink);padding:14px;display:flex;flex-direction:column;gap:11px;
-  position:relative;text-align:left;transition:background .16s ease
+  position:relative;text-align:left;transition:background var(--d-state) var(--e-state)
 }
 .card:hover{background:var(--raise)}
 .card .thumb{
@@ -1089,10 +1109,11 @@ table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-botto
   background:radial-gradient(circle at 50% 42%,rgba(255,90,31,.09),transparent 62%);opacity:0;transition:opacity .25s ease
 }
 .card:hover .thumb::before{opacity:1}
-.card .thumb svg{width:62%;height:62%;transition:transform .3s cubic-bezier(.2,.7,.3,1)}
+.card .thumb svg,.card .thumb .pimg{width:62%;height:62%;transition:transform var(--d-in) var(--e-in)}
 .card:hover .thumb svg{transform:scale(1.06)}
 .card .brand{font:500 .64rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.card .name{font-family:var(--f-disp);font-weight:700;font-size:.92rem;line-height:1.24;letter-spacing:-.006em;font-variation-settings:"wdth" 108;min-height:2.5em}
+.card .name{font-family:var(--f-disp);font-weight:700;font-size:.92rem;line-height:1.24;letter-spacing:-.006em;font-variation-settings:"wdth" 108;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card .chips{display:flex;flex-wrap:wrap;gap:5px}
 .card .chips .chip{font-size:.62rem;padding:3px 6px}
 .card .foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;padding-top:4px}
@@ -1105,7 +1126,7 @@ table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-botto
   position:absolute;left:14px;right:14px;bottom:14px;
   height:36px;border-radius:var(--r-md);background:var(--accent);color:var(--accent-ink);
   font:600 .78rem/1 var(--f-body);display:flex;align-items:center;justify-content:center;gap:7px;
-  opacity:0;transform:translateY(6px);transition:opacity .18s ease,transform .18s cubic-bezier(.2,.7,.3,1)
+  opacity:0;transform:translateY(6px);transition:opacity var(--d-state) var(--e-state),transform var(--d-in) var(--e-in)
 }
 .card:hover .add,.card:focus-within .add{opacity:1;transform:none}
 .card .add svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.1}
@@ -1506,7 +1527,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
 </svg>
 
   <!-- ----- kategoriler ----- -->
-  <section class="sec" id="kategoriler">
+  <section class="sec sec-loose" id="kategoriler">
     <div class="wrap">
       <div class="sec-head">
         <div class="t">
@@ -1533,7 +1554,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
       </div>
       <div class="kits">
         <article class="kit">
-          <div class="art"><svg viewBox="0 0 120 120"><use href="#ic-goggle"/></svg></div>
+          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-goggle"/></svg></span></div>
           <div><h3 class="d-md">Başlangıç Analog 3"</h3><p class="sub">İlk quad'ı olan, bahçede öğrenen pilot için.</p></div>
           <div class="stats">
             <div><span class="k">Kalkış ağırlığı</span><span class="v">248 g</span></div>
@@ -1548,7 +1569,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
         </article>
         <article class="kit hero">
           <span class="badge">EN ÇOK KURULAN</span>
-          <div class="art"><svg viewBox="0 0 120 120"><use href="#ic-kit"/></svg></div>
+          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-kit"/></svg></span></div>
           <div><h3 class="d-md">Freestyle 5" 6S</h3><p class="sub">Sahnede kurduğumuz build. Bando ve park için standart.</p></div>
           <div class="stats">
             <div><span class="k">Kalkış ağırlığı</span><span class="v">552 g</span></div>
@@ -1562,7 +1583,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
           </div>
         </article>
         <article class="kit">
-          <div class="art"><svg viewBox="0 0 120 120"><use href="#ic-cam"/></svg></div>
+          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-cam"/></svg></span></div>
           <div><h3 class="d-md">Cinewhoop 3,5" HD</h3><p class="sub">Kapalı alan çekimi, korumalı pervane, dijital video.</p></div>
           <div class="stats">
             <div><span class="k">Kalkış ağırlığı</span><span class="v">395 g</span></div>
@@ -1580,7 +1601,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
   </section>
 
   <!-- ----- rehber / uyumluluk ----- -->
-  <section class="sec" id="rehber">
+  <section class="sec sec-tight" id="rehber">
     <div class="wrap guide">
       <div class="sec-head" style="margin-bottom:0">
         <div class="t">
@@ -1617,7 +1638,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
   </section>
 
   <!-- ----- güven bandı ----- -->
-  <section class="sec-alt"><div class="wrap"><div class="trust">
+  <section class="sec sec-tight sec-alt"><div class="wrap"><div class="trust">
     <div><svg viewBox="0 0 24 24"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>
       <div><div class="n">16:00'a kadar aynı gün</div><p>Stoktaki parçalar hafta içi aynı gün kargoda. ₺1.500 üzeri ücretsiz.</p></div></div>
     <div><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.2-2.9 7.4-7 9-4.1-1.6-7-4.8-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
@@ -1745,7 +1766,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
 .cfg-classes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:20px}
 .cls{
   text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);
-  background:var(--carbon);display:grid;gap:5px;transition:.15s ease
+  background:var(--carbon);display:grid;gap:5px;transition:border-color var(--d-state) var(--e-state),background var(--d-state) var(--e-state)
 }
 .cls:hover{border-color:var(--dim)}
 .cls[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
@@ -1786,7 +1807,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
 .opt{
   display:flex;gap:11px;align-items:flex-start;text-align:left;
   padding:10px;border:1px solid var(--line-soft);border-radius:var(--r-md);
-  background:var(--ink);transition:.14s ease
+  background:var(--ink);transition:border-color var(--d-state) var(--e-state),background var(--d-state) var(--e-state)
 }
 .opt:hover{border-color:var(--dim)}
 .opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
@@ -2331,7 +2352,7 @@ function renderCart(){
     body.innerHTML = cart.map(function(it){
       var p = PMAP[it.id]; if(!p) return '';
       return '<div class="ci" data-key="'+esc(it.key)+'">'+
-        '<div class="th"><svg viewBox="0 0 120 120"><use href="#'+CATMAP[p.cat].ic+'"/></svg></div>'+
+        '<div class="th">'+thumbArt(p,160)+'</div>'+
         '<div class="m"><div class="n">'+esc(p.name)+'</div>'+
         (it.variant?'<div class="v">'+esc(it.variant)+'</div>':'')+
         '<div class="r"><div class="qty2"><button data-act="dec" aria-label="Azalt">−</button><span>'+it.qty+'</span><button data-act="inc" aria-label="Artır">+</button></div>'+
@@ -2391,7 +2412,8 @@ function catCount(id){ return P.filter(function(p){ return p.cat===id; }).length
 el('catGrid').innerHTML = CATS.map(function(c){
   return '<a class="cat" href="#/urunler?k='+c.id+'" data-nav>'+
     '<span class="arw"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>'+
-    '<span class="art"><svg viewBox="0 0 120 120"><use href="#'+c.ic+'"/></svg></span>'+
+    '<span class="art"><span class="tk" data-tk="'+c.id+'" data-tk-px="300">'+
+      '<svg viewBox="0 0 120 120"><use href="#'+c.ic+'"/></svg></span></span>'+
     '<span><span class="n">'+c.n+'</span><span class="c">'+catCount(c.id)+' ÜRÜN</span></span></a>';
 }).join('');
 
@@ -2430,16 +2452,18 @@ function results(){
 function stockLabel(s){
   return s==='in' ? ['','Stokta'] : (s==='low' ? ['low','Son birkaç'] : ['out','Tükendi']);
 }
-function thumbArt(p){
-  return p.img ? '<img class="pimg" src="'+esc(p.img)+'" alt="'+esc(p.name)+'" loading="lazy">'
-               : '<svg viewBox="0 0 120 120"><use href="#'+CATMAP[p.cat].ic+'"/></svg>';
+/* Gerçek fotoğraf varsa o; yoksa parça modelinden render; o da yoksa SVG ikon. */
+function thumbArt(p, px){
+  if (p.img) return '<img class="pimg" src="'+esc(p.img)+'" alt="'+esc(p.name)+'" loading="lazy">';
+  return '<span class="tk" data-tk="'+p.cat+'" data-tk-px="'+(px||340)+'">'+
+         '<svg viewBox="0 0 120 120"><use href="#'+CATMAP[p.cat].ic+'"/></svg></span>';
 }
-function cardHTML(p){
+function cardHTML(p, hero){
   var sl = stockLabel(p.stock);
   var flag = p.isNew ? '<span class="flag new">YENİ</span>' : (p.old ? '<span class="flag">KİT İNDİRİMİ</span>' : '');
-  return '<div class="card">'+flag+
+  return '<div class="card'+(hero?' hero':'')+'">'+flag+
     '<a class="thumb" href="#/urun/'+p.id+'" data-nav aria-label="'+esc(p.name)+' detayı">'+
-      thumbArt(p)+'</a>'+
+      thumbArt(p, hero?560:340)+'</a>'+
     '<div class="brand">'+esc(p.brand)+'</div>'+
     '<a class="name" href="#/urun/'+p.id+'" data-nav>'+esc(p.name)+'</a>'+
     '<div class="chips">'+(p.chips||[]).slice(0,3).map(function(c){ return '<span class="chip">'+esc(c)+'</span>'; }).join('')+'</div>'+
@@ -2494,7 +2518,9 @@ function renderCatalog(){
   el('crumbCat').textContent = c ? c.n : 'Tüm ürünler';
   el('catDesc').textContent = c ? c.desc : 'Gövdeden LiPo’ya, stoklu FPV parçaları. Filtreler montaj deseni ve hücre aralığına göre çalışır.';
   el('resCount').innerHTML = '<b>'+r.length+'</b> ürün';
-  el('grid').innerHTML = r.length ? r.map(cardHTML).join('')
+  var heroOn = (state.cat === 'all' && !state.q && state.sort === 'pop' && r.length > 6);
+  el('grid').className = 'grid-p' + (heroOn ? ' has-hero' : '');
+  el('grid').innerHTML = r.length ? r.map(function(p,i){ return cardHTML(p, heroOn && i === 0); }).join('')
     : '<div class="empty"><div class="d-md">Bu filtrelerle ürün yok.</div><p>Bir filtreyi kaldırıp tekrar deneyin — stok her gün yenileniyor.</p></div>';
   renderFilters(); renderChips();
 }
@@ -2562,11 +2588,15 @@ function renderPDP(id){
 
   var h = '';
   h += '<div class="gal">'+
-    '<div class="main">'+(p.img?'<img class="pimg" src="'+esc(p.img)+'" alt="'+esc(p.name)+'">':'<svg viewBox="0 0 120 120"><use href="#'+ic+'"/></svg>')+
+    '<div class="main">'+(p.img?'<img class="pimg" src="'+esc(p.img)+'" alt="'+esc(p.name)+'">'
+      :'<span class="tk" data-tk="'+p.cat+'" data-tk-px="640" data-tk-view="'+pdpState.shot+'">'+
+       '<svg viewBox="0 0 120 120"><use href="#'+ic+'"/></svg></span>')+
       '<div class="osd"><div><span>'+esc(p.brand.toUpperCase())+'</span><span>'+esc(CATMAP[p.cat].n.toUpperCase())+'</span></div>'+
       '<div><span>'+(p.w?p.w+' G':'STOK '+sl[1].toUpperCase())+'</span><span>REF '+p.id.toUpperCase()+'</span></div></div></div>'+
     '<div class="thumbs">'+shots.map(function(s,i){
-      return '<button aria-pressed="'+(i===pdpState.shot?'true':'false')+'" data-shot="'+i+'"><svg viewBox="0 0 120 120"><use href="#'+s+'"/></svg></button>';
+      return '<button aria-pressed="'+(i===pdpState.shot?'true':'false')+'" data-shot="'+i+'">'+
+        '<span class="tk" data-tk="'+p.cat+'" data-tk-px="200" data-tk-view="'+i+'">'+
+        '<svg viewBox="0 0 120 120"><use href="#'+s+'"/></svg></span></button>';
     }).join('')+'</div></div>';
 
   h += '<div class="pinfo">'+
@@ -2638,9 +2668,7 @@ el('pdp').addEventListener('click', function(e){
   var s = e.target.closest('[data-shot]');
   if(s){
     pdpState.shot = parseInt(s.getAttribute('data-shot'),10);
-    el('pdp').querySelectorAll('[data-shot]').forEach(function(b){
-      b.setAttribute('aria-pressed', b===s ? 'true':'false');
-    });
+    renderPDP(pdpState.id);   /* büyük görsel de o açıya dönsün */
     return;
   }
   var t = e.target.closest('[data-tab]');
@@ -2848,7 +2876,8 @@ function renderConfig(){
         var rec = cl.preset[s.k] === o.p.id;
         return '<button class="opt' + (o.iss && o.iss.level === 'bad' ? ' bad' : '') + '" data-pick="' + s.k + ':' + o.p.id + '"' +
           ' aria-pressed="' + (pid === o.p.id) + '">' +
-          '<span class="opt-art"><svg viewBox="0 0 120 120"><use href="#' + CATMAP[o.p.cat].ic + '"/></svg></span>' +
+          '<span class="opt-art"><span class="tk" data-tk="' + o.p.cat + '" data-tk-px="180">' +
+          '<svg viewBox="0 0 120 120"><use href="#' + CATMAP[o.p.cat].ic + '"/></svg></span></span>' +
           '<span class="opt-m"><span class="opt-brand">' + esc(o.p.brand) + (rec ? ' · ÖNERİLEN' : '') + '</span>' +
           '<span class="opt-name">' + esc(o.p.name) + '</span>' +
           '<span class="opt-meta">' + (o.p.w ? o.p.w + ' g · ' : '') + TRY(o.p.price) + '</span>' +
@@ -3127,6 +3156,23 @@ onScroll(true);
 })();
 </script>
 <style>
+/* ---- parça modelinden üretilen ürün görselleri ---- */
+.tk{display:grid;place-items:center;width:100%;height:100%}
+.tk-img{display:block;object-fit:contain;transition:transform var(--d-in) var(--e-in)}
+.card .thumb .tk-img{width:88%;height:88%}
+.card:hover .thumb .tk-img{transform:scale(1.06)}
+.cat .art .tk-img{width:100%;height:100%}
+.cat:hover .art .tk-img{transform:scale(1.07) rotate(-3deg)}
+.kit .art .tk-img{width:112%;height:112%}
+.gal .main .tk{position:relative}
+.gal .main .tk-img{width:82%;height:82%}
+.gal .thumbs .tk-img{width:84%;height:84%}
+.ci .th .tk-img{width:94%;height:94%}
+.opt-art .tk-img{width:96%;height:96%}
+@media (prefers-reduced-motion:reduce){
+  .card:hover .thumb .tk-img,.cat:hover .art .tk-img{transform:none}
+}
+
 /* ---- fotoğraf yuvaları: dosya varsa vektör çizimin yerini alır ---- */
 .layer .lp{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
 .layer.has-photo .lp{display:block}
@@ -3242,11 +3288,13 @@ var carbonTex = (function(){
 
 /* ---------------- malzemeler ---------------- */
 var M = {
-  carbon:   new THREE.MeshStandardMaterial({color:0x141a23, roughness:.44, metalness:.2, envMapIntensity:.32}),
+  carbon:   new THREE.MeshPhysicalMaterial({color:0x141a23, roughness:.46, metalness:.18,
+              clearcoat:.6, clearcoatRoughness:.32, envMapIntensity:.32}),
   alu:      new THREE.MeshStandardMaterial({color:0xa8b2bf, roughness:.28, metalness:1}),
   aluDark:  new THREE.MeshStandardMaterial({color:0x3a424e, roughness:.45, metalness:1}),
   anod:     new THREE.MeshStandardMaterial({color:0xff5a1f, roughness:.34, metalness:.85}),
-  pcb:      new THREE.MeshStandardMaterial({color:0x1a212a, roughness:.68, metalness:.06, envMapIntensity:.4}),
+  pcb:      new THREE.MeshPhysicalMaterial({color:0x1a212a, roughness:.6, metalness:.06,
+              clearcoat:.35, clearcoatRoughness:.5, envMapIntensity:.4}),
   chip:     new THREE.MeshStandardMaterial({color:0x0b0f13, roughness:.45, metalness:.2}),
   gold:     new THREE.MeshStandardMaterial({color:0xc9973f, roughness:.28, metalness:1}),
   dark:     new THREE.MeshStandardMaterial({color:0x0a0d11, roughness:.7,  metalness:.1, envMapIntensity:.3}),
@@ -3279,10 +3327,17 @@ function roundRect(w,h,r){
   s.lineTo(x,y+r); s.quadraticCurveTo(x,y,x+r,y);
   return s;
 }
-/* şekli XZ düzlemine yatırıp +Y yönünde kalınlık verir */
+/* Şekli XZ düzlemine yatırıp +Y yönünde kalınlık verir.
+   Kenarlara pah atılır: keskin köşe küçük boyutta plastik gibi duruyordu.
+   Pah kalınlığı toplam kalınlığın içinden alınır, ölçü değişmez. */
 function slab(shape, thick, mat){
-  var g = new THREE.ExtrudeGeometry(shape, {depth:thick, bevelEnabled:false});
+  var bt = Math.min(.35, thick / 4);
+  var g = new THREE.ExtrudeGeometry(shape, {
+    depth: thick - bt * 2, bevelEnabled:true,
+    bevelThickness:bt, bevelSize:bt, bevelOffset:0, bevelSegments:2
+  });
   g.rotateX(-Math.PI/2);
+  g.translate(0, bt, 0);            /* taban yine y=0'da kalsın */
   var m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true; return m;
 }
 function cyl(rt, rb, h, seg, mat){
@@ -3318,6 +3373,16 @@ function makeFrame(){
   for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
     var p = cyl(2.7,2.7,36,16,M.alu); p.position.set(sx*STACK, 18, sz*STACK); g.add(p);
     var b1 = cyl(3.4,3.4,2,12,M.aluDark); b1.position.set(sx*STACK, 1, sz*STACK); g.add(b1);
+  }
+  /* yüzey detayı: alt plakada panel çizgileri ve M3 vida başları */
+  var pl1 = box(38,.5,1.0,M.dark); pl1.position.set(0,.06,-30); g.add(pl1);
+  var pl2 = box(38,.5,1.0,M.dark); pl2.position.set(0,.06, 30); g.add(pl2);
+  var SCREWS = [[0,-43],[0,43],[-16,-36],[16,-36],[-16,36],[16,36]];
+  for (var si=0; si<SCREWS.length; si++){
+    var head = cyl(2.2,2.2,1.2,14,M.aluDark);
+    head.position.set(SCREWS[si][0], .6, SCREWS[si][1]); g.add(head);
+    var slot = box(2.9,.45,.7,M.dark);
+    slot.position.set(SCREWS[si][0], 1.15, SCREWS[si][1]); g.add(slot);
   }
   /* kamerayı tutan ön yan plakalar — kamera boşlukta durmasın */
   for (var s=-1; s<=1; s+=2){
@@ -3568,6 +3633,161 @@ function makePack(){
   var plug = box(9,4,3,M.strap); plug.position.set(22,64,26); g.add(plug);
   return g;
 }
+
+/* ================================================================
+   ÜRÜN GÖRSELLERİ — aynı parça modellerinden render
+   Katalog kartı, kategori, sepet, yapılandırıcı ve ürün sayfası
+   artık düz ikon yerine bu render'ları kullanıyor. Her anahtar için
+   bir kez çizilir, sonuç data URL olarak önbellekte tutulur.
+   ================================================================ */
+function makeAntenna(){
+  var g = new THREE.Group();
+  var sma  = cyl(3,3,7,16,M.alu);        sma.position.y = 3.5;  g.add(sma);
+  var boot = cyl(2.2,2.2,6,12,M.aluDark); boot.position.y = 9;   g.add(boot);
+  var rod  = cyl(1.3,1.3,28,12,M.wire);   rod.position.y = 24;   g.add(rod);
+  var loop = new THREE.Mesh(new THREE.TorusGeometry(6.5,1.5,12,28), M.anod);
+  loop.position.y = 44; loop.castShadow = true; g.add(loop);
+  return g;
+}
+function makeQuad(){
+  var g = new THREE.Group();
+  g.add(makeFrame()); g.add(makeMotors()); g.add(makeEsc()); g.add(makeFc());
+  g.add(makeVtx());   g.add(makeCam());    g.add(makeRx());  g.add(makeProps());
+  g.add(makeBattery());
+  return g;
+}
+function makeGoggles(){
+  var g = new THREE.Group();
+  var body = box(148, 52, 44, M.wrap);      body.position.y = 26;         g.add(body);
+  var face = box(138, 44, 4,  M.chip);      face.position.set(0,26,23);   g.add(face);
+  var foam = box(118, 46, 11, M.strap);     foam.position.set(0,25,-23);  g.add(foam);
+  for (var s=-1; s<=1; s+=2){
+    var barrel = cyl(17,17,9,24,M.aluDark); barrel.rotation.x = Math.PI/2;
+    barrel.position.set(s*35, 26, -22); g.add(barrel);
+    var lens = cyl(13,13,2.4,24,M.glass);   lens.rotation.x = Math.PI/2;
+    lens.position.set(s*35, 26, -26); g.add(lens);
+    var sma = cyl(3.4,3.4,11,14,M.alu);     sma.position.set(s*42, 57, 4); g.add(sma);
+    var ear = box(6, 22, 26, M.aluDark);    ear.position.set(s*76, 26, 0); g.add(ear);
+  }
+  var knob = cyl(4,4,3,14,M.aluDark); knob.rotation.z = Math.PI/2;
+  knob.position.set(76, 44, 10); g.add(knob);
+  var led = cyl(1.7,1.7,.9,10,M.teal); led.position.set(56, 52.5, 16); g.add(led);
+  return g;
+}
+function makeTool(){
+  var g = new THREE.Group();
+  var H = [30, 24, 18, 12];
+  for (var i=0; i<4; i++){
+    var p = cyl(3.2,3.2,H[i],16,M.alu);
+    p.position.set(-17 + i*11.5, H[i]/2, 0); g.add(p);
+    var bore = cyl(1.5,1.5,H[i]+.6,10,M.dark);
+    bore.position.set(-17 + i*11.5, H[i]/2, 0); g.add(bore);
+  }
+  for (var s=-1; s<=1; s+=2){
+    var head = cyl(3,3,1.8,14,M.aluDark); head.position.set(s*10, .9, 17); g.add(head);
+    var stem = cyl(1.5,1.5,11,12,M.alu);  stem.position.set(s*10, -4.5, 17); g.add(stem);
+    var slot = box(4.2,.5,.9,M.dark);     slot.position.set(s*10, 1.85, 17); g.add(slot);
+  }
+  return g;
+}
+var THUMB_PARTS = {
+  frame:makeFrame, motor:makeMotor, esc:makeEsc, fc:makeFc, vtx:makeVtx,
+  cam:makeCam, rx:makeRx, lipo:makePack, ant:makeAntenna, kit:makeQuad,
+  goggle:makeGoggles, tool:makeTool,
+  prop:function(){ return makeProp(true); }
+};
+
+/* Küçük boyutta parçanın okunması için sahnenin soğuk ışığı yetmiyor;
+   thumbnail'lara ayrı, daha sıcak ve kontrastlı üç nokta düzeni. */
+var TH = null;
+function thumbRig(){
+  if (TH) return TH;
+  var r;
+  try {
+    r = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true});
+  } catch(e){ return null; }
+  r.setPixelRatio(1);
+  r.outputEncoding = THREE.sRGBEncoding;
+  r.toneMapping = THREE.ACESFilmicToneMapping;
+  r.toneMappingExposure = 1.42;   /* kart boyutunda parça okunur kalsın */
+  var sc = new THREE.Scene();
+  sc.environment = scene.environment;
+  var key = new THREE.DirectionalLight(0xffeedd, 3.2); key.position.set(-140, 190, 150); key.color.convertSRGBToLinear(); sc.add(key);
+  var fil = new THREE.DirectionalLight(0x9dbfe8, .85); fil.position.set(180, 60, -60);   fil.color.convertSRGBToLinear(); sc.add(fil);
+  var rim = new THREE.DirectionalLight(0xff8a4a, 1.25); rim.position.set(30, -50, -190); rim.color.convertSRGBToLinear(); sc.add(rim);
+  var hem = new THREE.HemisphereLight(0x54677f, 0x0a0e12, 1.0);
+  hem.color.convertSRGBToLinear(); hem.groundColor.convertSRGBToLinear(); sc.add(hem);
+  var holder = new THREE.Group(); sc.add(holder);
+  TH = { r:r, sc:sc, cam:new THREE.PerspectiveCamera(32, 1, 1, 5000), holder:holder };
+  return TH;
+}
+var THUMB_VIEWS = [[-28,24],[64,16],[0,78],[-118,20]];   /* 3/4 · yandan · üstten · arkadan */
+var thumbCache = {};
+function renderThumb(key, px, view){
+  var v = THUMB_VIEWS[view] || THUMB_VIEWS[0];
+  var ck = key + '|' + px + '|' + view;
+  if (thumbCache[ck] !== undefined) return thumbCache[ck];
+  var make = THUMB_PARTS[key];
+  if (!make){ thumbCache[ck] = null; return null; }
+  var rig = thumbRig();
+  if (!rig){ thumbCache[ck] = null; return null; }
+  var obj;
+  try { obj = make(); } catch(e){ thumbCache[ck] = null; return null; }
+  while (rig.holder.children.length) rig.holder.remove(rig.holder.children[0]);
+  rig.holder.add(obj);
+
+  var box  = new THREE.Box3().setFromObject(obj);
+  var size = box.getSize(new THREE.Vector3());
+  var ctr  = box.getCenter(new THREE.Vector3());
+  var maxd = Math.max(size.x, size.y, size.z) || 1;
+  var dist = (maxd * 0.62) / Math.tan(rad(16));
+  var a = rad(v[0]), e = rad(v[1]);
+  rig.cam.position.set(
+    ctr.x + Math.sin(a) * Math.cos(e) * dist,
+    ctr.y + Math.sin(e) * dist,
+    ctr.z + Math.cos(a) * Math.cos(e) * dist
+  );
+  rig.cam.lookAt(ctr);
+  rig.cam.aspect = 1;
+  rig.cam.updateProjectionMatrix();
+  rig.r.setSize(px, px, false);
+  rig.r.render(rig.sc, rig.cam);
+  var url = null;
+  try { url = rig.r.domElement.toDataURL('image/png'); } catch(e){}
+  rig.holder.remove(obj);
+  thumbCache[ck] = url;
+  return url;
+}
+
+/* DOM'daki [data-tk] yuvalarını doldur; kartlar filtreyle yeniden
+   çizildiğinde de yakalansın diye gövdeyi izliyoruz. */
+function applyThumbs(){
+  var nodes = document.querySelectorAll('[data-tk]:not([data-tk-on])');
+  for (var i=0; i<nodes.length; i++){
+    var n  = nodes[i];
+    var px = parseInt(n.getAttribute('data-tk-px') || '340', 10);
+    var vw = parseInt(n.getAttribute('data-tk-view') || '0', 10);
+    var url = renderThumb(n.getAttribute('data-tk'), px, vw);
+    if (!url){ n.setAttribute('data-tk-on', 'skip'); continue; }
+    var im = document.createElement('img');
+    im.className = 'tk-img'; im.src = url; im.alt = '';
+    n.textContent = '';
+    n.appendChild(im);
+    n.setAttribute('data-tk-on', '1');
+  }
+}
+var tkQueued = false;
+function queueThumbs(){
+  if (tkQueued) return;
+  tkQueued = true;
+  /* rAF gizli sekmede durur; setTimeout her durumda tetiklenir */
+  setTimeout(function(){ tkQueued = false; applyThumbs(); }, 0);
+}
+if (window.MutationObserver){
+  new MutationObserver(queueThumbs).observe(document.body, {childList:true, subtree:true});
+}
+queueThumbs();
+window.__karbonThumbs = { render:renderThumb, apply:applyThumbs, cache:thumbCache };
 
 /* ================= sahneyi kur ================= */
 var quad = new THREE.Group();
