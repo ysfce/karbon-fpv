@@ -1554,7 +1554,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
       </div>
       <div class="kits">
         <article class="kit">
-          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-goggle"/></svg></span></div>
+          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-kit"/></svg></span></div>
           <div><h3 class="d-md">Başlangıç Analog 3"</h3><p class="sub">İlk quad'ı olan, bahçede öğrenen pilot için.</p></div>
           <div class="stats">
             <div><span class="k">Kalkış ağırlığı</span><span class="v">248 g</span></div>
@@ -1583,7 +1583,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
           </div>
         </article>
         <article class="kit">
-          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-cam"/></svg></span></div>
+          <div class="art"><span class="tk" data-tk="kit" data-tk-px="420"><svg viewBox="0 0 120 120"><use href="#ic-kit"/></svg></span></div>
           <div><h3 class="d-md">Cinewhoop 3,5" HD</h3><p class="sub">Kapalı alan çekimi, korumalı pervane, dijital video.</p></div>
           <div class="stats">
             <div><span class="k">Kalkış ağırlığı</span><span class="v">395 g</span></div>
@@ -1910,7 +1910,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
         <li><a href="#/urunler?k=kit" data-nav>Hazır kitler</a></li>
         <li><a href="#/urunler?k=motor" data-nav>Motorlar</a></li>
         <li><a href="#/urunler?k=fc" data-nav>Uçuş kontrol kartı</a></li>
-        <li><a href="#/urunler?k=lipo" data-nav>Batarya &amp; şarj</a></li>
+        <li><a href="#/urunler?k=lipo" data-nav>Batarya</a></li>
       </ul></div>
       <div class="f-col"><h4>Yardım</h4><ul>
         <li><a href="#rehber" data-nav>Build rehberi</a></li>
@@ -1971,10 +1971,9 @@ var CATS = [
   {id:'fc',     n:'Uçuş Kontrol Kartı', ic:'ic-fc',     desc:'F4, F7 ve H7 kartlar, AIO ve stack seçenekleri.'},
   {id:'vtx',    n:'Video Verici',       ic:'ic-vtx',    desc:'Analog 5,8 GHz ve dijital HD video sistemleri.'},
   {id:'cam',    n:'Kamera',             ic:'ic-cam',    desc:'Micro ve nano analog kameralar, HD sensörler.'},
-  {id:'rx',     n:'Alıcı & Kumanda',    ic:'ic-tx',     desc:'ELRS, Crossfire, Ghost alıcı ve kumandalar.'},
+  {id:'rx',     n:'Alıcı',              ic:'ic-rx',     desc:'ELRS, Crossfire ve Ghost alıcıları.'},
   {id:'prop',   n:'Pervane',            ic:'ic-prop',   desc:'2 – 7 inç, 2/3/5 kanat, poli-karbonat.'},
-  {id:'lipo',   n:'Batarya & Şarj',     ic:'ic-lipo',   desc:'1S – 6S LiPo, şarj aletleri, güvenlik çantası.'},
-  {id:'goggle', n:'Gözlük & Monitör',   ic:'ic-goggle', desc:'Analog ve dijital FPV gözlükleri, modüller.'},
+  {id:'lipo',   n:'Batarya',            ic:'ic-lipo',   desc:'1S – 6S LiPo paketler, kayış ve güvenlik çantası.'},
   {id:'ant',    n:'Anten',              ic:'ic-ant',    desc:'5,8 GHz verici ve alıcı antenleri, patch.'},
   {id:'tool',   n:'Sarf & Alet',        ic:'ic-tool',   desc:'Kablo, konnektör, standoff, lehim malzemesi.'}
 ];
@@ -1992,7 +1991,6 @@ var COMPAT = {
   rx:[[1,'ExpressLRS 3.x firmware, 2,4 GHz'],[1,'Kumandanız da ELRS olmalı — Crossfire ile eşleşmez'],[1,'UART üzerinden CRSF protokolü']],
   prop:[[1,'M5 mil deliği, standart 5 inç motorlara uyar'],[1,'2 CW + 2 CCW olarak gelir'],[1,'Poli-karbonat, çarpmada kırılmak yerine esner']],
   lipo:[[1,'XT60 güç, JST-XH dengeleme fişi'],[1,'6S kurulumlar için 150C tepe deşarj'],[0,'1S – 4S kurulumlarda kullanılmaz']],
-  goggle:[[1,'DVR kaydı ve harici modül yuvası'],[1,'Diyoptri ayarı, gözlük üstüne takılabilir'],[1,'2 pilli veya XT60 ile beslenir']],
   ant:[[1,'RP-SMA ve MMCX seçenekleri mevcut'],[1,'Sağ el dairesel polarizasyon (RHCP)'],[1,'5,8 GHz tüm bantlarda düşük SWR']],
   tool:[[1,'FPV kurulumları için standart ölçü'],[1,'Yedek olarak stokta bulundurulması önerilir']],
   kit:[[1,'Tüm parçaların uyumluluğu tarafımızdan test edildi'],[1,'Betaflight ayarları yüklenmiş olarak gönderilir'],[1,'Lehimli seçenekte uçuşa hazır teslim']]
@@ -2128,15 +2126,7 @@ var P = [
  specs:{'Çözünürlük':'1200TVL','Sensör':'1/1,8" Starlight','Lens':'2,1 mm','Format':'4:3 / 16:9','Giriş':'5 – 40 V','Ağırlık':'8 g'},
  desc:'Düşük ışıkta rakipsiz. Akşam uçuşlarında görüntü kararmaz.'},
 
-/* --- alıcı & kumanda --- */
-{id:'r2',cat:'rx',brand:'RadioMaster',name:'Pocket ELRS Kumanda',price:3850,rate:4.8,rev:302,stock:'in',pop:91,
- chips:['ELRS','EdgeTX','Hall gimbal'],vars:{label:'Renk',opts:['Siyah','Şeffaf']},
- specs:{'Protokol':'ExpressLRS 2,4 GHz','Firmware':'EdgeTX','Gimbal':'Hall efektli','Çıkış gücü':'250 mW','Batarya':'2× 18650','Ağırlık':'285 g'},
- desc:'Cebe giren, tam donanımlı kumanda. Simülatör için USB, ELRS dahili.'},
-{id:'r3',cat:'rx',brand:'RadioMaster',name:'Boxer ELRS Kumanda',price:6250,rate:4.9,rev:184,stock:'in',pop:88,
- chips:['ELRS','1 W','AG01 gimbal'],
- specs:{'Protokol':'ExpressLRS 2,4 GHz','Firmware':'EdgeTX','Gimbal':'AG01 Hall','Çıkış gücü':'1 W','Batarya':'2× 18650','Ağırlık':'505 g'},
- desc:'Uzun mesafe ve yarış için 1 W çıkış. Kutu gövde uzun uçuşta yormaz.'},
+/* --- alıcı --- */
 {id:'r4',cat:'rx',brand:'TBS',name:'Crossfire Nano RX Alıcı',price:1290,rate:4.7,rev:143,stock:'in',pop:70,
  chips:['868 MHz','Crossfire','Menzil'],
  specs:{'Protokol':'Crossfire','Frekans':'868 / 915 MHz','Çıkış':'CRSF','Menzil':'40 km+','Anten':'Immortal T','Ağırlık':'1,4 g'},
@@ -2177,25 +2167,6 @@ var P = [
  chips:['6S','4000 mAh','7 inç'],
  specs:{'Hücre':'6S1P 22,2 V','Kapasite':'4000 mAh','Deşarj':'25C sürekli','Konnektör':'XT60','Denge fişi':'JST-XH','Ağırlık':'620 g'},
  desc:'7 inç long range için büyük paket. Düşük C değeri yerine kapasite önemlidir; 20 dakikaya varan uçuş verir.'},
-{id:'l5',cat:'lipo',brand:'ToolkitRC',name:'M6D Çift Kanal Şarj Aleti',price:3450,rate:4.8,rev:86,stock:'in',pop:74,
- chips:['2×300 W','1S – 6S','İç direnç'],
- specs:{'Güç':'2× 300 W','Akım':'2× 15 A','Hücre':'1S – 6S LiPo','Giriş':'DC 7 – 30 V','Ekran':'IPS renkli','Ağırlık':'420 g'},
- desc:'İki paketi aynı anda şarj eder, hücre iç direncini gösterir. Paket ömrünü takip etmenin en kolay yolu.'},
-
-/* --- gözlük --- */
-{id:'g1',cat:'goggle',brand:'Walksnail',name:'Avatar HD Goggles X',price:14900,rate:4.7,rev:112,stock:'in',pop:94,isNew:1,
- chips:['1080p','Dijital','DVR'],
- specs:{'Panel':'1080p Micro-OLED','FOV':'46°','Gecikme':'22 ms','Kayıt':'1080p60 dahili','Diyoptri':'-6 ~ +2','Ağırlık':'298 g'},
- desc:'Avatar sisteminin gözlüğü. OLED panel siyahları gerçekten siyah gösterir.'},
-{id:'g2',cat:'goggle',brand:'Fatshark',name:'Dominator HDO3 Gözlük',price:21500,rate:4.6,rev:48,stock:'low',pop:72,
- chips:['OLED','Modüler','Analog+HD'],
- specs:{'Panel':'0,49" OLED ×2','FOV':'46°','Çözünürlük':'1920×1080','Modül':'HDZero / Analog','Diyoptri':'Ayarlı','Ağırlık':'186 g'},
- desc:'En hafif kutu gözlük. Modül yuvası sayesinde analogdan HD’ye geçebilirsiniz.'},
-{id:'g3',cat:'goggle',brand:'Skyzone',name:'Cobra X V4 Analog Gözlük',price:12750,rate:4.5,rev:94,stock:'in',pop:68,
- chips:['Analog','SteadyView','DVR'],
- specs:{'Panel':'0,49" OLED ×2','FOV':'46°','Alıcı':'SteadyView diversity','Kayıt':'1080p DVR','Diyoptri':'Ayarlı','Ağırlık':'340 g'},
- desc:'Analog için en iyi alıcı. SteadyView iki antenin görüntüsünü birleştirir, kar tanesi kalmaz.'},
-
 /* --- anten --- */
 {id:'a1',cat:'ant',brand:'Foxeer',name:'Lollipop 4 5,8 GHz (2 adet)',price:320,rate:4.7,rev:246,stock:'in',pop:87,
  chips:['RHCP','MMCX','2 adet'],vars:{label:'Konnektör',opts:['MMCX','SMA','U.FL']},
@@ -2722,9 +2693,9 @@ var X = {
   c2:{w:9}, c3:{w:10}, c4:{w:13,aio:true,amp:40},
   v2:{w:19,digital:true}, v3:{w:31,digital:true}, v4:{w:12},
   k2:{w:9}, k3:{w:8},
-  r2:{tx:true}, r3:{tx:true}, r4:{w:2,proto:'Crossfire'}, r5:{w:2,proto:'ELRS'},
+  r4:{w:2,proto:'Crossfire'}, r5:{w:2,proto:'ELRS'},
   p2:{w:17}, p3:{w:34}, p4:{w:9},
-  l2:{cells:6,w:187}, l3:{cells:6,w:216}, l4:{cells:4,w:96}, l5:{tool:true}, l6:{cells:6,w:620},
+  l2:{cells:6,w:187}, l3:{cells:6,w:216}, l4:{cells:4,w:96}, l6:{cells:6,w:620},
   b7:{proto:'ELRS'}, b9:{cells:6}
 };
 X.m2.w = 124; X.m3.w = 128; X.e2.w = 14;
@@ -3656,24 +3627,6 @@ function makeQuad(){
   g.add(makeBattery());
   return g;
 }
-function makeGoggles(){
-  var g = new THREE.Group();
-  var body = box(148, 52, 44, M.wrap);      body.position.y = 26;         g.add(body);
-  var face = box(138, 44, 4,  M.chip);      face.position.set(0,26,23);   g.add(face);
-  var foam = box(118, 46, 11, M.strap);     foam.position.set(0,25,-23);  g.add(foam);
-  for (var s=-1; s<=1; s+=2){
-    var barrel = cyl(17,17,9,24,M.aluDark); barrel.rotation.x = Math.PI/2;
-    barrel.position.set(s*35, 26, -22); g.add(barrel);
-    var lens = cyl(13,13,2.4,24,M.glass);   lens.rotation.x = Math.PI/2;
-    lens.position.set(s*35, 26, -26); g.add(lens);
-    var sma = cyl(3.4,3.4,11,14,M.alu);     sma.position.set(s*42, 57, 4); g.add(sma);
-    var ear = box(6, 22, 26, M.aluDark);    ear.position.set(s*76, 26, 0); g.add(ear);
-  }
-  var knob = cyl(4,4,3,14,M.aluDark); knob.rotation.z = Math.PI/2;
-  knob.position.set(76, 44, 10); g.add(knob);
-  var led = cyl(1.7,1.7,.9,10,M.teal); led.position.set(56, 52.5, 16); g.add(led);
-  return g;
-}
 function makeTool(){
   var g = new THREE.Group();
   var H = [30, 24, 18, 12];
@@ -3693,7 +3646,7 @@ function makeTool(){
 var THUMB_PARTS = {
   frame:makeFrame, motor:makeMotor, esc:makeEsc, fc:makeFc, vtx:makeVtx,
   cam:makeCam, rx:makeRx, lipo:makePack, ant:makeAntenna, kit:makeQuad,
-  goggle:makeGoggles, tool:makeTool,
+  tool:makeTool,
   prop:function(){ return makeProp(true); }
 };
 
