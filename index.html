@@ -1322,7 +1322,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
   /* satır yükseklikleri yüzdeyle sabitlenir; içerik taşıp rayın altına giremez */
   .stage-wrap{
     grid-template-columns:minmax(0,1fr);
-    grid-template-rows:minmax(0,46%) minmax(0,54%);
+    grid-template-rows:minmax(0,42%) minmax(0,58%);
   }
   .stage{order:1;min-height:0;padding:6px 0 0}
   .scene-3d{width:min(94vw,520px);max-height:100%;aspect-ratio:1}
@@ -1343,10 +1343,14 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
   .spec-list div{padding:5px 0}
   .panel-foot{gap:6px}
   .panel-foot .btn{height:32px;padding:0 12px;font-size:.75rem}
-  .finale .big{gap:16px;margin-bottom:12px}
-  .finale .big .v{font-size:1.3rem}
-  .finale .cta{gap:7px}
-  .finale .cta .btn-lg{height:44px;font-size:.85rem}
+  /* finale paneli en yuksek panel; dar ekranda rayin altina tasiyordu */
+  .finale .big{gap:14px;margin-bottom:10px}
+  .finale .big .v{font-size:1.1rem}
+  .finale .big .tag{font-size:.58rem}
+  .finale p{display:none}
+  .finale .cta{grid-template-columns:1fr 1fr;gap:6px}
+  .finale .cta .btn-lg{grid-column:1/-1;height:40px;font-size:.82rem}
+  .finale .cta .btn-ghost{height:34px;font-size:.74rem;padding:0 10px}
   .rail{padding:0 var(--pad) 10px}
   .rail-btn{font-size:.5rem;letter-spacing:.04em;padding:6px 1px}
 }
@@ -2209,7 +2213,7 @@ var P = [
  specs:{'Sınıf':'3 inç freestyle','Kalkış ağırlığı':'248 g','Batarya':'4S 850 mAh','Uçuş süresi':'~5 dk','Video':'Analog 5,8 GHz','Parça':'11 adet'},
  desc:'İlk quad için her şey kutuda: gövde, motor, stack, kamera, VTX, alıcı, pervane, batarya ve sarf. Ayarlar yüklenmiş gelir.'},
 {id:'kit2',cat:'kit',brand:'Karbon FPV',name:'Freestyle 5" 6S Kit',price:13900,old:15050,rate:4.9,rev:128,stock:'in',pop:100,size:'5',cell:'6S',
- chips:['5 inç','6S','552 g'],vars:{label:'Montaj',opts:['Lehimsiz','Lehimli (+₺950)']},
+ chips:['5 inç','6S','540 g'],vars:{label:'Montaj',opts:['Lehimsiz','Lehimli (+₺950)']},
  specs:{'Sınıf':'5 inç freestyle','Kalkış ağırlığı':'540 g','Batarya':'6S 1400 mAh','Uçuş süresi':'~4,5 dk','Video':'Analog 800 mW','Parça':'9 adet'},
  desc:'Ana sayfada adım adım kurduğumuz build’in tamamı. Bando ve park için standart 5 inç.'},
 {id:'kit3',cat:'kit',brand:'Karbon FPV',name:'Cinewhoop 3,5" HD Kit',price:21750,old:23900,rate:4.8,rev:52,stock:'low',pop:86,size:'3.5',cell:'6S',
