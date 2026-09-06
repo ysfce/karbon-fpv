@@ -18,7 +18,7 @@ Aynı site iki farklı montaj sahnesiyle duruyor; ikisi de tek dosya, ikisi de a
 
 ## Ne var
 
-- **Kaydırmalı 3D montaj sahnesi** — ana sayfada pinlenmiş bir WebGL sahnesinde quad adım adım kuruluyor: gövde → motorlar → ESC → uçuş kontrol → VTX → kamera → alıcı & anten → pervaneler → batarya. Sağdaki montaj listesi doldukça kalkış ağırlığı (AUW) ve sepet toplamı canlı olarak akıyor. En sonda kataloğa giden buton ve "bu build'i sepete ekle" seçeneği var.
+- **Kaydırmalı 3D montaj sahnesi** — ana sayfada pinlenmiş bir WebGL sahnesinde quad adım adım kuruluyor: gövde → motorlar → ESC → uçuş kontrol → VTX → kamera → alıcı & anten → pervaneler → kapak ve batarya. Son adım iki hareketli: gövdenin üst kapağı standoff'lara iner, batarya da onun üstüne oturur (kapak ayrı bir kalem değil, gövde kitinin parçası). Sağdaki montaj listesi doldukça kalkış ağırlığı (AUW) ve sepet toplamı canlı olarak akıyor. En sonda kataloğa giden buton ve "bu build'i sepete ekle" seçeneği var.
 - **Katalog** — 12 kategori, filtre rayı (kategori, marka, boyut, hücre, stack montaj deseni, stok), sıralama, aktif filtre çipleri, arama.
 - **Ürün sayfası** — varyant seçimi, adet, teknik özellik tablosu, uyumluluk listesi, kargo/iade sekmesi, uyumlu ürün önerileri.
 - **Sepet çekmecesi** — adet güncelleme, ücretsiz kargo ilerleme çubuğu, `localStorage` ile kalıcılık.
@@ -57,9 +57,9 @@ WebGL yoksa ya da kütüphane yüklenmezse sahne sessizce SVG çizimlerine düş
 Montaj sahnesindeki dokuz parça, kod değişikliği gerektirmeden gerçek fotoğrafla değiştirilebilir. Depoda `parca/` klasörü açıp dosyaları şu adlarla koyun; sayfa dosyayı bulursa vektör çizimin yerine fotoğrafı kullanır, bulamazsa sessizce çizimde kalır:
 
 ```
-parca/01-govde.png   parca/04-fc.png       parca/07-alici.png    parca/10-batarya.png
-parca/02-motor.png   parca/05-vtx.png      parca/08-pervane.png
-parca/03-esc.png     parca/06-kamera.png   parca/09-ust-kapak.png
+parca/01-govde.png     parca/04-fc.png      parca/07-alici.png
+parca/02-motor.png     parca/05-vtx.png     parca/08-pervane.png
+parca/03-esc.png       parca/06-kamera.png  parca/09-batarya.png
 ```
 
 Fotoğrafların katman hâlinde üst üste binmesi için üç kural önemli:
