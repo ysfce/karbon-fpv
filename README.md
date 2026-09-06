@@ -3,6 +3,18 @@
 FPV yarış ve freestyle drone parçaları satan bir e-ticaret sitesi için arayüz tasarımı. Tek dosyalık, bağımlılıksız statik prototip (`index.html`).
 
 **Canlı:** https://ysfce.github.io/karbon-fpv/
+**2D vektör sürümü (karşılaştırma için):** https://ysfce.github.io/karbon-fpv/2d.html
+
+Aynı site iki farklı montaj sahnesiyle duruyor; ikisi de tek dosya, ikisi de aynı içeriği kullanıyor:
+
+| | `index.html` (3D) | `2d.html` (2D) |
+| --- | --- | --- |
+| Parçalar | Three.js ile mm ölçeğinde katı geometri | Üst üste dizilmiş SVG çizimleri |
+| Derinlik | Gerçek perspektif kamera, yörünge hareketi | CSS 3D ile eğilmiş düz düzlemler |
+| Işık | Gölge haritalı anahtar ışık + ortam yansıması | Elle çizilmiş gradyan ve spekülar |
+| Oturma | Parçalar gerçekten üst üste oturuyor | Katmanlar yaklaşık hizalanıyor |
+| Ağırlık | +Three.js (~600 KB, cdnjs) | Ek yük yok |
+| Yedek | WebGL yoksa 2D çizimlere düşer | — |
 
 ## Ne var
 
@@ -45,9 +57,9 @@ WebGL yoksa ya da kütüphane yüklenmezse sahne sessizce SVG çizimlerine düş
 Montaj sahnesindeki dokuz parça, kod değişikliği gerektirmeden gerçek fotoğrafla değiştirilebilir. Depoda `parca/` klasörü açıp dosyaları şu adlarla koyun; sayfa dosyayı bulursa vektör çizimin yerine fotoğrafı kullanır, bulamazsa sessizce çizimde kalır:
 
 ```
-parca/01-govde.png     parca/04-fc.png      parca/07-alici.png
-parca/02-motor.png     parca/05-vtx.png     parca/08-pervane.png
-parca/03-esc.png       parca/06-kamera.png  parca/09-batarya.png
+parca/01-govde.png   parca/04-fc.png       parca/07-alici.png    parca/10-batarya.png
+parca/02-motor.png   parca/05-vtx.png      parca/08-pervane.png
+parca/03-esc.png     parca/06-kamera.png   parca/09-ust-kapak.png
 ```
 
 Fotoğrafların katman hâlinde üst üste binmesi için üç kural önemli:
