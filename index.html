@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Karbon FPV</title>
-<meta name="description" content="FPV yarış ve freestyle drone parçaları. Gövde, motor, ESC, uçuş kontrol, VTX, kamera, pervane ve LiPo — kaydırdıkça kurulan bir quad.">
+<meta name="description" content="FPV yarış ve freestyle drone parçaları. Gövde, motor, ESC, uçuş kontrol, VTX, kamera, pervane ve LiPo — kaydırdıkça 3D olarak kurulan bir quad.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Karbon FPV">
-<meta property="og:description" content="FPV drone parçaları — kaydırdıkça adım adım kurulan bir quad.">
+<meta property="og:description" content="FPV drone parçaları — kaydırdıkça adım adım kurulan 3D bir quad.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23090B0F'/%3E%3Ccircle cx='30' cy='30' r='13' fill='none' stroke='%23FF5A1F' stroke-width='7'/%3E%3Ccircle cx='70' cy='30' r='13' fill='none' stroke='%23FF5A1F' stroke-width='7'/%3E%3Ccircle cx='30' cy='70' r='13' fill='none' stroke='%23FF5A1F' stroke-width='7'/%3E%3Ccircle cx='70' cy='70' r='13' fill='none' stroke='%23FF5A1F' stroke-width='7'/%3E%3Crect x='40' y='40' width='20' height='20' rx='4' fill='%233FE0BF'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2660,5 +2660,579 @@ onScroll(true);
   }
 })();
 </script>
+
+<!-- ==== 3D MONTAJ ==== -->
+
+<style>
+/* WebGL sahnesi devreye girince vektör yedeği kapanır */
+.scene-3d canvas{position:absolute;inset:0;display:block}
+.scene-3d.webgl .scene,.scene-3d.webgl .shadow-plate{display:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+/* ================================================================
+   KARBON FPV — parçaların gerçek 3D modeli
+   1 birim = 1 mm. Y ekseni yukarı. Ölçüler gerçek parçalardan:
+   226 mm köşegen, 30,5×30,5 stack, 2207 motor, 5" pervane, 6S 1400.
+   ================================================================ */
+(function(){
+"use strict";
+if (!window.THREE) return;
+var host = document.getElementById('scene3d');
+var build = document.getElementById('build');
+if (!host || !build) return;
+
+var renderer;
+try {
+  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, powerPreference:'high-performance'});
+  if (!renderer.getContext()) return;
+} catch(e){ return; }
+
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var clamp = function(v,a,b){ return v<a?a:(v>b?b:v); };
+var lerp  = function(a,b,t){ return a+(b-a)*t; };
+var ease  = function(t){ return 1-Math.pow(1-t,3); };
+var rad   = THREE.MathUtils.degToRad;
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+host.classList.add('webgl');
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(40, 1, 5, 4000);
+
+/* ---------------- ortam: metallerin yansıtacağı yumuşak stüdyo ---------------- */
+(function env(){
+  var cv = document.createElement('canvas'); cv.width = 512; cv.height = 256;
+  var c = cv.getContext('2d');
+  var g = c.createLinearGradient(0,0,0,256);
+  g.addColorStop(0,'#222b36'); g.addColorStop(.42,'#414e60');
+  g.addColorStop(.52,'#0d1116'); g.addColorStop(1,'#05070a');
+  c.fillStyle = g; c.fillRect(0,0,512,256);
+  var s = c.createRadialGradient(150,70,4,150,70,90);
+  s.addColorStop(0,'#dfe6ef'); s.addColorStop(1,'rgba(223,230,239,0)');
+  c.fillStyle = s; c.fillRect(0,0,512,256);
+  var s2 = c.createRadialGradient(390,105,4,390,105,70);
+  s2.addColorStop(0,'#ffb489'); s2.addColorStop(1,'rgba(255,180,137,0)');
+  c.fillStyle = s2; c.fillRect(0,0,512,256);
+  var tex = new THREE.CanvasTexture(cv);
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  tex.encoding = THREE.sRGBEncoding;
+  try { scene.environment = new THREE.WebGLCubeRenderTarget(128).fromEquirectangularTexture(renderer, tex).texture; }
+  catch(e){}
+})();
+
+/* ---------------- karbon dokusu (prosedürel twill) ---------------- */
+var carbonTex = (function(){
+  var n = 128, cv = document.createElement('canvas'); cv.width = cv.height = n;
+  var c = cv.getContext('2d');
+  c.fillStyle = '#9fabba'; c.fillRect(0,0,n,n);
+  var q = n/2;
+  c.fillStyle = '#c8d2de'; c.fillRect(0,0,q,q); c.fillRect(q,q,q,q);
+  c.strokeStyle = 'rgba(0,0,0,.22)'; c.lineWidth = 1;
+  for (var i=0;i<n;i+=4){ c.beginPath(); c.moveTo(i,0); c.lineTo(i,q); c.stroke(); }
+  for (var j=0;j<n;j+=4){ c.beginPath(); c.moveTo(0,j+q); c.lineTo(q,j+q); c.stroke(); }
+  for (var k=0;k<n;k+=4){ c.beginPath(); c.moveTo(q,k); c.lineTo(n,k); c.stroke(); }
+  for (var l=0;l<n;l+=4){ c.beginPath(); c.moveTo(l+q,q); c.lineTo(l+q,n); c.stroke(); }
+  var t = new THREE.CanvasTexture(cv);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(3,3); t.encoding = THREE.sRGBEncoding;
+  return t;
+})();
+
+/* ---------------- malzemeler ---------------- */
+var M = {
+  carbon:   new THREE.MeshStandardMaterial({color:0x141a23, roughness:.44, metalness:.2, envMapIntensity:.32}),
+  alu:      new THREE.MeshStandardMaterial({color:0xa8b2bf, roughness:.28, metalness:1}),
+  aluDark:  new THREE.MeshStandardMaterial({color:0x3a424e, roughness:.45, metalness:1}),
+  anod:     new THREE.MeshStandardMaterial({color:0xff5a1f, roughness:.34, metalness:.85}),
+  pcb:      new THREE.MeshStandardMaterial({color:0x1a212a, roughness:.68, metalness:.06, envMapIntensity:.4}),
+  chip:     new THREE.MeshStandardMaterial({color:0x0b0f13, roughness:.45, metalness:.2}),
+  gold:     new THREE.MeshStandardMaterial({color:0xc9973f, roughness:.28, metalness:1}),
+  dark:     new THREE.MeshStandardMaterial({color:0x0a0d11, roughness:.7,  metalness:.1, envMapIntensity:.3}),
+  rubber:   new THREE.MeshStandardMaterial({color:0xff5a1f, roughness:.85, metalness:0, envMapIntensity:.5}),
+  wrap:     new THREE.MeshStandardMaterial({color:0x121820, roughness:.62, metalness:.04, envMapIntensity:.35}),
+  strap:    new THREE.MeshStandardMaterial({color:0x1b2129, roughness:.92, metalness:0, envMapIntensity:.35}),
+  xt60:     new THREE.MeshStandardMaterial({color:0xd8a92a, roughness:.5,  metalness:.1}),
+  glass:    new THREE.MeshStandardMaterial({color:0x123f43, roughness:.06, metalness:.9}),
+  lensRing: new THREE.MeshStandardMaterial({color:0x8f99a6, roughness:.3,  metalness:1}),
+  wire:     new THREE.MeshStandardMaterial({color:0x2b323b, roughness:.72, metalness:.1}),
+  prop:     new THREE.MeshStandardMaterial({color:0x6b7684, roughness:.14, metalness:.05,
+              transparent:true, opacity:.44, side:THREE.DoubleSide}),
+  teal:     new THREE.MeshStandardMaterial({color:0x3fe0bf, roughness:.4, metalness:.2,
+              emissive:0x1c6b5c, emissiveIntensity:.6})
+};
+
+/* r134 hex renkleri doğrusal sayar, çıkışta gama uygular; renkleri önceden
+   sRGB -> doğrusala çevirmezsek her yüzey soluk griye kaçar. */
+Object.keys(M).forEach(function(k){
+  if (M[k].color)    M[k].color.convertSRGBToLinear();
+  if (M[k].emissive) M[k].emissive.convertSRGBToLinear();
+});
+
+/* ---------------- yardımcılar ---------------- */
+function roundRect(w,h,r){
+  var s = new THREE.Shape(), x = -w/2, y = -h/2;
+  s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.quadraticCurveTo(x+w,y,x+w,y+r);
+  s.lineTo(x+w,y+h-r); s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  s.lineTo(x+r,y+h); s.quadraticCurveTo(x,y+h,x,y+h-r);
+  s.lineTo(x,y+r); s.quadraticCurveTo(x,y,x+r,y);
+  return s;
+}
+/* şekli XZ düzlemine yatırıp +Y yönünde kalınlık verir */
+function slab(shape, thick, mat){
+  var g = new THREE.ExtrudeGeometry(shape, {depth:thick, bevelEnabled:false});
+  g.rotateX(-Math.PI/2);
+  var m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true; return m;
+}
+function cyl(rt, rb, h, seg, mat){
+  var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg||24), mat);
+  m.castShadow = m.receiveShadow = true; return m;
+}
+function box(w,h,d,mat){
+  var m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  m.castShadow = m.receiveShadow = true; return m;
+}
+function at(o,x,y,z){ o.position.set(x,y,z); return o; }
+
+var MXY = 80;              /* motor merkezleri: (±80, ±80) -> 226 mm köşegen */
+var STACK = 15.25;         /* 30,5×30,5 montaj deseni */
+
+/* ================= 01 · GÖVDE ================= */
+function makeFrame(){
+  var g = new THREE.Group();
+  /* alt plaka */
+  var bp = slab(roundRect(46, 98, 9), 2.5, M.carbon); bp.position.y = -2.5; g.add(bp);
+  /* dört kol + motor tablası */
+  for (var i=0;i<4;i++){
+    var arm = new THREE.Group();
+    var s = new THREE.Shape();
+    s.moveTo(4,-8.5); s.lineTo(99,-7); s.lineTo(99,7); s.lineTo(4,8.5); s.lineTo(4,-8.5);
+    var a = slab(s, 5, M.carbon); arm.add(a);
+    var pad = cyl(14,14,5,28,M.carbon); pad.position.set(113,2.5,0); arm.add(pad);
+    var padHole = cyl(4,4,5.6,18,M.dark); padHole.position.set(113,2.5,0); arm.add(padHole);
+    arm.rotation.y = rad(45 + i*90);
+    g.add(arm);
+  }
+  /* standoff'lar 30,5×30,5 */
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var p = cyl(2.7,2.7,36,16,M.alu); p.position.set(sx*STACK, 18, sz*STACK); g.add(p);
+    var b1 = cyl(3.4,3.4,2,12,M.aluDark); b1.position.set(sx*STACK, 1, sz*STACK); g.add(b1);
+  }
+  /* kamerayı tutan ön yan plakalar — kamera boşlukta durmasın */
+  for (var s=-1; s<=1; s+=2){
+    var side = new THREE.Mesh(new THREE.BoxGeometry(2, 24, 20), M.carbon);
+    side.castShadow = side.receiveShadow = true;
+    side.position.set(s*11.6, 12, -40);
+    g.add(side);
+  }
+  return g;
+}
+
+/* ================= 02 · MOTORLAR (2207) ================= */
+function makeMotor(){
+  var m = new THREE.Group();
+  var base = cyl(13.6,13.6,3,32,M.aluDark); base.position.y = 6.5; m.add(base);
+  var stator = cyl(11.5,11.5,7,32,M.dark);  stator.position.y = 11; m.add(stator);
+  var bell = cyl(13.95,13.2,15,36,M.alu);   bell.position.y = 18.5; m.add(bell);
+  var ring = cyl(14.1,14.1,2.2,36,M.anod);  ring.position.y = 25.4; m.add(ring);
+  var cap = cyl(13.2,13.9,1.6,36,M.alu);    cap.position.y = 26.8; m.add(cap);
+  for (var i=0;i<8;i++){
+    var a = i/8*Math.PI*2;
+    var hole = cyl(1.9,1.9,2.2,12,M.dark);
+    hole.position.set(Math.cos(a)*8.6, 27.2, Math.sin(a)*8.6); m.add(hole);
+  }
+  var shaft = cyl(2.5,2.5,7,16,M.alu); shaft.position.y = 30; m.add(shaft);
+  var nut   = cyl(4,4,2.6,6,M.aluDark); nut.position.y = 28.4; m.add(nut);
+  /* motor kablosu */
+  var curve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0,7,13), new THREE.Vector3(-6,6,22), new THREE.Vector3(-22,4,34)]);
+  var w = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 1.1, 8, false), M.wire);
+  w.castShadow = true; m.add(w);
+  return m;
+}
+function makeMotors(){
+  var g = new THREE.Group();
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var m = makeMotor();
+    m.position.set(sx*MXY, 0, sz*MXY);
+    m.rotation.y = Math.atan2(-sx, -sz);
+    g.add(m);
+  }
+  return g;
+}
+
+/* ================= devre kartı ortak gövdesi ================= */
+function boardBase(size, y, label){
+  var g = new THREE.Group();
+  var b = slab(roundRect(size, size, 3), 1.6, M.pcb); g.add(b);
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var pad = cyl(3,3,1.9,14,M.gold); pad.position.set(sx*STACK, .8, sz*STACK); g.add(pad);
+    var hole = cyl(1.6,1.6,2.2,10,M.dark); hole.position.set(sx*STACK, .8, sz*STACK); g.add(hole);
+  }
+  g.position.y = y;
+  return g;
+}
+
+/* ================= 03 · ESC (4'ü 1 arada) ================= */
+function makeEsc(){
+  var g = boardBase(36, 6, 'ESC');
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var fet = box(8,1.6,7,M.chip); fet.position.set(sx*8.5, 2.4, sz*8); g.add(fet);
+  }
+  var cap = cyl(5.2,5.2,10,20,M.aluDark); cap.position.set(0,6.6,13); cap.rotation.x = Math.PI/2;
+  cap.position.set(0,4,14); g.add(cap);
+  for (var i=0;i<4;i++){
+    var p1 = cyl(1.5,1.5,1.8,10,M.gold); p1.position.set(-18.6, 1.6, -12+i*8); g.add(p1);
+    var p2 = cyl(1.5,1.5,1.8,10,M.gold); p2.position.set( 18.6, 1.6, -12+i*8); g.add(p2);
+  }
+  var xtWire = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0,2.4,16), new THREE.Vector3(4,4,26), new THREE.Vector3(6,10,36)]), 12, 1.6, 8, false), M.dark);
+  g.add(xtWire);
+  return g;
+}
+
+/* ================= 04 · UÇUŞ KONTROL ================= */
+function makeFc(){
+  var g = boardBase(36, 16, 'FC');
+  var gyro = box(9,1.4,9,M.chip); gyro.position.set(0,2.3,0); g.add(gyro);
+  var mcu  = box(11,1.2,11,M.chip); mcu.position.set(0,2.3,0); mcu.visible = false; g.add(mcu);
+  var usb  = box(9,3.2,7,M.alu); usb.position.set(0,2.4,-18.5); g.add(usb);
+  var chip2 = box(7,1.2,5,M.chip); chip2.position.set(11,2.2,-8); g.add(chip2);
+  var led = cyl(1,1,.6,10,M.teal); led.position.set(-13,2.2,12); g.add(led);
+  /* turuncu kauçuk takozlar */
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var gr = cyl(3.2,3.2,3.4,16,M.rubber); gr.position.set(sx*STACK, 1.4, sz*STACK); g.add(gr);
+    var hl = cyl(1.5,1.5,4,10,M.dark); hl.position.set(sx*STACK, 1.4, sz*STACK); g.add(hl);
+  }
+  for (var i=0;i<3;i++){
+    var pd = cyl(1.4,1.4,1.8,10,M.gold); pd.position.set(-18.6,1.6,-6+i*6); g.add(pd);
+  }
+  return g;
+}
+
+/* ================= 05 · VTX ================= */
+function makeVtx(){
+  var g = new THREE.Group();
+  var b = slab(roundRect(30,30,3), 1.4, M.pcb); g.add(b);
+  var hs = box(24,5,20,M.aluDark); hs.position.set(0,3.4,-2); g.add(hs);
+  for (var i=0;i<7;i++){
+    var fin = box(1.2,3.2,19,M.alu); fin.position.set(-10.5+i*3.5, 6.9, -2); g.add(fin);
+  }
+  var mmcx = cyl(2.4,2.4,4,14,M.alu); mmcx.position.set(-11,2.6,12); mmcx.rotation.x = Math.PI/2; g.add(mmcx);
+  var pin = cyl(.7,.7,4.6,8,M.gold); pin.position.set(-11,2.6,12); pin.rotation.x = Math.PI/2; g.add(pin);
+  var conn = box(9,2.4,4,M.chip); conn.position.set(7,2,12); g.add(conn);
+  var led2 = cyl(.9,.9,.6,10,M.anod); led2.position.set(12,1.4,10); g.add(led2);
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var h = cyl(1.5,1.5,2,10,M.dark); h.position.set(sx*STACK*.98, .7, sz*STACK*.98); g.add(h);
+  }
+  g.position.y = 26;
+  return g;
+}
+
+/* ================= 06 · KAMERA ================= */
+function makeCam(){
+  var g = new THREE.Group();
+  var body = box(19,19,14,M.pcb); g.add(body);
+  var back = box(16,16,2,M.chip); back.position.z = 7.6; g.add(back);
+  var barrel = cyl(8,8.6,9,28,M.aluDark); barrel.rotation.x = Math.PI/2; barrel.position.z = -10; g.add(barrel);
+  var ring = cyl(8.2,8.2,1.4,28,M.lensRing); ring.rotation.x = Math.PI/2; ring.position.z = -14.4; g.add(ring);
+  var glass = cyl(6.4,6.4,1.2,28,M.glass); glass.rotation.x = Math.PI/2; glass.position.z = -14.9; g.add(glass);
+  for (var s=-1; s<=1; s+=2){
+    var br = box(2,12,10,M.alu); br.position.set(s*10.5,0,-1); g.add(br);
+    var scr = cyl(1.6,1.6,2.4,10,M.aluDark); scr.position.set(s*11.4,0,-1); scr.rotation.z = Math.PI/2; g.add(scr);
+  }
+  g.position.set(0, 18, -42);
+  g.rotation.x = rad(-22);
+  return g;
+}
+
+/* ================= 07 · ALICI & ANTEN ================= */
+function makeRx(){
+  var g = new THREE.Group();
+  var b = slab(roundRect(22,11,1.5), 1.2, M.pcb); g.add(b);
+  var chip = box(5,1,4,M.chip); chip.position.set(-6,1.6,0); g.add(chip);
+  var led = cyl(.8,.8,.5,8,M.teal); led.position.set(6,1.4,3); g.add(led);
+  for (var s=-1; s<=1; s+=2){
+    var ant = new THREE.Group();
+    var rod = cyl(.8,.8,30,10,M.wire); rod.position.y = 15; ant.add(rod);
+    var loop = new THREE.Mesh(new THREE.TorusGeometry(5,1.2,10,26), M.anod);
+    loop.position.y = 34; loop.castShadow = true; ant.add(loop);
+    ant.position.set(s*9, 1, 3);
+    ant.rotation.z = rad(-s*34); ant.rotation.x = rad(24);
+    g.add(ant);
+  }
+  g.position.set(0, 33, 36);
+  return g;
+}
+
+/* ================= 08 · PERVANELER (5×4,3×3) ================= */
+function bladeGeometry(){
+  var s = new THREE.Shape();
+  s.moveTo(6,-5);
+  s.quadraticCurveTo(22,-8.4, 38,-7.6);
+  s.quadraticCurveTo(52,-6.6, 61,-3.6);
+  s.quadraticCurveTo(64.6,-1, 63.4,2.2);
+  s.quadraticCurveTo(56,6.6, 40,8.2);
+  s.quadraticCurveTo(22,9.2, 6,5);
+  s.quadraticCurveTo(3,0, 6,-5);
+  var g = new THREE.ExtrudeGeometry(s, {depth:1.5, bevelEnabled:false});
+  g.translate(0,0,-0.75);
+  var pos = g.attributes.position;
+  for (var i=0;i<pos.count;i++){
+    var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    var t = clamp((x-6)/57, 0, 1);
+    var a = rad(-27 + 17*t);                    /* kökte yüksek hatve, uçta düşük */
+    pos.setY(i, y*Math.cos(a) - z*Math.sin(a));
+    pos.setZ(i, y*Math.sin(a) + z*Math.cos(a));
+  }
+  pos.needsUpdate = true;
+  g.computeVertexNormals();
+  g.rotateX(-Math.PI/2);
+  return g;
+}
+var BLADE = null;
+function makeProp(cw){
+  var g = new THREE.Group();
+  if (!BLADE) BLADE = bladeGeometry();
+  for (var i=0;i<3;i++){
+    var b = new THREE.Mesh(BLADE, M.prop);
+    b.castShadow = true;
+    b.rotation.y = i/3*Math.PI*2;
+    g.add(b);
+  }
+  var hub = cyl(8,8,5.5,24,M.alu); hub.position.y = 1.6; g.add(hub);
+  var hole = cyl(2.6,2.6,6.4,14,M.dark); hole.position.y = 1.6; g.add(hole);
+  if (!cw) g.scale.z = -1;
+  return g;
+}
+function makeProps(){
+  var g = new THREE.Group(); g.userData.spinners = [];
+  var i = 0;
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var p = makeProp((sx*sz) > 0);
+    p.position.set(sx*MXY, 31.5, sz*MXY);
+    p.userData.dir = (sx*sz) > 0 ? 1 : -1;
+    g.userData.spinners.push(p);
+    g.add(p); i++;
+  }
+  return g;
+}
+
+/* ================= 09 · ÜST PLAKA + BATARYA ================= */
+function makeBattery(){
+  var g = new THREE.Group();
+  var tp = slab(roundRect(44, 64, 8), 2, M.carbon); tp.position.y = 36; g.add(tp);
+  for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
+    var scr = cyl(2.4,2.4,1.6,12,M.aluDark); scr.position.set(sx*STACK, 38.6, sz*STACK); g.add(scr);
+  }
+  var pack = slab(roundRect(34, 74, 4), 32, M.wrap); pack.position.y = 38; g.add(pack);
+  var band = slab(roundRect(34.4, 74.4, 4), 11, M.anod); band.position.y = 47; g.add(band);
+  for (var s=-1; s<=1; s+=2){
+    var st = box(38, 38, 4.5, M.strap); st.position.set(0, 54, s*23); g.add(st);
+  }
+  var xt = box(16,8,8,M.xt60); xt.position.set(0, 45, 40); g.add(xt);
+  var pin1 = box(3.4,5,8.4,M.dark); pin1.position.set(-4, 45, 40); g.add(pin1);
+  var pin2 = box(3.4,5,8.4,M.dark); pin2.position.set( 4, 45, 40); g.add(pin2);
+  var lead = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+    new THREE.Vector3(10,49,39), new THREE.Vector3(18,56,35), new THREE.Vector3(22,63,27)]), 14, 1.4, 8, false), M.wire);
+  lead.castShadow = true; g.add(lead);
+  var plug = box(9,4,3,M.strap); plug.position.set(22,64,26); g.add(plug);
+  return g;
+}
+
+/* ================= sahneyi kur ================= */
+var quad = new THREE.Group();
+quad.rotation.y = Math.PI;   /* burnu (FPV kamerası) izleyiciye dönsün */
+scene.add(quad);
+
+var PARTS3D = [
+  {k:'frame', obj:makeFrame(),   drop:110},
+  {k:'motor', obj:makeMotors(),  drop:120},
+  {k:'esc',   obj:makeEsc(),     drop: 95},
+  {k:'fc',    obj:makeFc(),      drop: 90},
+  {k:'vtx',   obj:makeVtx(),     drop: 85},
+  {k:'cam',   obj:makeCam(),     drop: 80},
+  {k:'rx',    obj:makeRx(),      drop: 75},
+  {k:'prop',  obj:makeProps(),   drop: 70},
+  {k:'lipo',  obj:makeBattery(), drop:100}
+];
+/* malzemeler parçalar arasında paylaşıldığı için her parçaya kendi kopyası verilir;
+   yoksa bir parçanın solması ötekini de soldurur */
+PARTS3D.forEach(function(p){
+  p.baseY = p.obj.position.y;
+  var seen = {};
+  p.mats = [];
+  p.obj.traverse(function(o){
+    if (!o.isMesh) return;
+    var id = o.material.uuid;
+    if (!seen[id]){
+      var c = o.material.clone();
+      c.transparent = true;
+      c.userData.baseOpacity = o.material.opacity;
+      seen[id] = c;
+      p.mats.push(c);
+    }
+    o.material = seen[id];
+  });
+  quad.add(p.obj);
+});
+
+/* zemin gölgesi */
+var ground = new THREE.Mesh(new THREE.PlaneGeometry(900,900), new THREE.ShadowMaterial({opacity:.3}));
+ground.rotation.x = -Math.PI/2; ground.position.y = -52; ground.receiveShadow = true;
+scene.add(ground);
+
+/* ışıklar: anahtar sol üstten, dolgu sağdan, kenar arkadan turuncu */
+var key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(-170, 280, 140); key.castShadow = true;
+key.shadow.mapSize.set(1024,1024);
+key.shadow.camera.left = -220; key.shadow.camera.right = 220;
+key.shadow.camera.top = 220; key.shadow.camera.bottom = -220;
+key.shadow.camera.near = 60; key.shadow.camera.far = 700;
+key.shadow.bias = -0.0012; key.shadow.normalBias = .6;
+scene.add(key);
+var fill = new THREE.DirectionalLight(0x8fb0d8, .75); fill.color.convertSRGBToLinear(); fill.position.set(210, 90, -60); scene.add(fill);
+var rim  = new THREE.DirectionalLight(0xff8a4a, .95); rim.color.convertSRGBToLinear(); rim.position.set(40, -30, -230); scene.add(rim);
+var hemi = new THREE.HemisphereLight(0x334051, 0x05070a, .55); hemi.color.convertSRGBToLinear(); hemi.groundColor.convertSRGBToLinear(); scene.add(hemi);
+
+/* ================= kaydırma koreografisi ================= */
+var RS = [-0.09, 0.135, 0.225, 0.315, 0.405, 0.495, 0.585, 0.675, 0.765];
+var WIN = 0.075;
+var callouts = document.querySelectorAll('#callouts .callout');
+var ANCHOR = [
+  new THREE.Vector3(-95, 4, 60), new THREE.Vector3(80, 26, -80), new THREE.Vector3(-20, 10, 20),
+  new THREE.Vector3(22, 26, 8),  new THREE.Vector3(-16, 40, -10), new THREE.Vector3(0, 20, -52),
+  new THREE.Vector3(0, 76, 34),  new THREE.Vector3(84, 33, 76),   new THREE.Vector3(0, 70, -30)
+];
+
+var spinning = false, spinAngle = 0, lastT = 0;
+var progress = 0, needsRender = true, inView = true;
+
+function resize(){
+  var w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+  needsRender = true;
+}
+
+function apply(p){
+  progress = p;
+  /* kamera yörüngesi */
+  var e = ease(p);
+  var az = reduce ? rad(-8) : rad(lerp(-26, 12, e));
+  var el = reduce ? rad(28) : rad(lerp(34, 22, e));
+  var d  = reduce ? 430 : lerp(490, 415, e);
+  camera.position.set(
+    Math.sin(az)*Math.cos(el)*d,
+    Math.sin(el)*d + 20,
+    Math.cos(az)*Math.cos(el)*d
+  );
+  camera.lookAt(0, 20, 0);
+
+  for (var i=0;i<PARTS3D.length;i++){
+    var pt = PARTS3D[i];
+    var t = clamp((p - RS[i]) / WIN, 0, 1);
+    var te = ease(t);
+    pt.obj.position.y = pt.baseY + (reduce ? 0 : (1-te) * pt.drop);
+    pt.obj.visible = t > 0.001;
+    for (var j=0;j<pt.mats.length;j++){
+      var m = pt.mats[j];
+      m.opacity = m.userData.baseOpacity * (reduce ? (t>.02?1:0) : te);
+    }
+  }
+  needsRender = true;
+}
+
+/* callout etiketlerini 3D noktadan ekrana yansıt */
+var v = new THREE.Vector3();
+function placeCallouts(){
+  var w = host.clientWidth, h = host.clientHeight;
+  for (var i=0;i<callouts.length && i<ANCHOR.length;i++){
+    var c = callouts[i];
+    if (!c.classList.contains('is-on')) continue;
+    v.copy(ANCHOR[i]).project(camera);
+    var x = (v.x*.5+.5)*w, y = (-v.y*.5+.5)*h;
+    c.style.left = clamp(x, 40, w-40) + 'px';
+    c.style.top  = clamp(y, 20, h-20) + 'px';
+    c.style.transform = 'translate(-50%,-50%)';
+  }
+}
+
+function readProgress(){
+  var range = build.offsetHeight - window.innerHeight;
+  if (range <= 0) return 0;
+  return clamp((window.pageYOffset - build.offsetTop) / range, 0, 1);
+}
+
+var raf = null;
+function frame(now){
+  raf = requestAnimationFrame(frame);
+  if (!inView) return;
+  var dt = lastT ? Math.min((now-lastT)/1000, .05) : 0; lastT = now;
+  if (spinning && !reduce){
+    spinAngle += dt * 26;
+    var sp = PARTS3D[7].obj.userData.spinners;
+    for (var i=0;i<sp.length;i++) sp[i].rotation.y = spinAngle * sp[i].userData.dir;
+    needsRender = true;
+  }
+  if (needsRender){
+    renderer.render(scene, camera);
+    placeCallouts();
+    needsRender = false;
+  }
+}
+
+var pending = false;
+function onScroll3D(){
+  if (pending) return;
+  pending = true;
+  requestAnimationFrame(function(){
+    pending = false;
+    var home = document.getElementById('view-home');
+    if (home && home.hidden) return;
+    apply(readProgress());
+  });
+}
+window.addEventListener('scroll', onScroll3D, {passive:true});
+window.addEventListener('resize', function(){ resize(); onScroll3D(); });
+window.addEventListener('hashchange', function(){ setTimeout(function(){ resize(); onScroll3D(); }, 30); });
+
+if (window.IntersectionObserver){
+  new IntersectionObserver(function(en){
+    inView = en[0].isIntersecting;
+    if (inView) { needsRender = true; lastT = 0; }
+  }, {rootMargin:'120px'}).observe(build);
+}
+
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest && ev.target.closest('#spinBtn');
+  if (!b) return;
+  spinning = !spinning;
+  if (!spinning){
+    var sp = PARTS3D[7].obj.userData.spinners;
+    for (var i=0;i<sp.length;i++) sp[i].rotation.y = 0;
+  }
+  needsRender = true;
+});
+
+/* önizleme kancası: konsoldan __karbon3D.apply(0..1) ile montajın herhangi bir anı görülebilir */
+window.__karbon3D = { apply: apply, resize: resize, scene: scene, parts: PARTS3D };
+
+resize();
+apply(readProgress());
+raf = requestAnimationFrame(frame);
+/* yazı tipleri/düzen oturduktan sonra ölçüyü tazele */
+setTimeout(function(){ resize(); onScroll3D(); }, 300);
+window.addEventListener('load', function(){ resize(); onScroll3D(); });
+})();
+</script>
+
 </body>
 </html>

@@ -6,11 +6,31 @@ FPV yarış ve freestyle drone parçaları satan bir e-ticaret sitesi için aray
 
 ## Ne var
 
-- **Kaydırmalı montaj sahnesi** — ana sayfada pinlenmiş bir sahnede quad gerçek CSS 3D katmanlarıyla üst üste kuruluyor: gövde → motorlar → ESC → uçuş kontrol → VTX → kamera → alıcı & anten → pervaneler → batarya. Sağdaki montaj listesi doldukça kalkış ağırlığı (AUW) ve sepet toplamı canlı olarak akıyor. En sonda kataloğa giden buton ve "bu build'i sepete ekle" seçeneği var.
+- **Kaydırmalı 3D montaj sahnesi** — ana sayfada pinlenmiş bir WebGL sahnesinde quad adım adım kuruluyor: gövde → motorlar → ESC → uçuş kontrol → VTX → kamera → alıcı & anten → pervaneler → batarya. Sağdaki montaj listesi doldukça kalkış ağırlığı (AUW) ve sepet toplamı canlı olarak akıyor. En sonda kataloğa giden buton ve "bu build'i sepete ekle" seçeneği var.
 - **Katalog** — 12 kategori, filtre rayı (kategori, marka, boyut, hücre, stack montaj deseni, stok), sıralama, aktif filtre çipleri, arama.
 - **Ürün sayfası** — varyant seçimi, adet, teknik özellik tablosu, uyumluluk listesi, kargo/iade sekmesi, uyumlu ürün önerileri.
 - **Sepet çekmecesi** — adet güncelleme, ücretsiz kargo ilerleme çubuğu, `localStorage` ile kalıcılık.
 - **Rehber** — sınıf/pervane/motor/KV/batarya/AUW uyumluluk tablosu ve üç adımlı build sırası.
+
+## 3D modeller
+
+Parçalar hazır model dosyası değil, `index.html` içinde Three.js (r134, cdnjs'ten) ile **kodla, milimetre ölçeğinde** kuruluyor — 1 birim = 1 mm, Y ekseni yukarı. Ölçüler gerçek parçalardan alındı:
+
+| Parça | Ölçü |
+| --- | --- |
+| Gövde | 226 mm köşegen, 5 mm kol, 30,5×30,5 stack deseni |
+| Motor | 2207 (27,9 mm çan), 36 mm standoff yüksekliği |
+| Kartlar | 36×36 mm ESC/FC, 30×30 mm VTX, 1,6 mm PCB |
+| Pervane | 5 inç (127 mm), 3 kanat, kökte 27° uca doğru 10° hatve burulması |
+| Batarya | 6S 1400 → 34×32×74 mm, üst plakaya kayışlı |
+
+Kanat profili düz bir levha değil: planform şekli extrude edilip her köşe noktası, merkeze olan uzaklığına göre kendi ekseninde döndürülerek gerçek hatve burulması veriliyor. Karşılıklı iki pervane CW, diğer ikisi CCW.
+
+Sahnede tek yönlü anahtar ışık (gölge haritalı), mavi dolgu, turuncu kenar ışığı ve prosedürel bir stüdyo ortamı var; metaller o ortamı yansıtıyor. Malzeme renkleri sRGB'den doğrusala çevriliyor — bu yapılmazsa r134 çıkışta gama uygulayıp bütün yüzeyleri soluk griye çeviriyor.
+
+Modeli incelemek için tarayıcı konsolunda `__karbon3D.apply(0.5)` yazarak montajın herhangi bir anını dondurabilirsiniz (0 = boş gövde, 1 = tamamlanmış quad).
+
+WebGL yoksa ya da kütüphane yüklenmezse sahne sessizce SVG çizimlerine düşer; içerik hiçbir durumda kaybolmaz.
 
 ## Tasarım kararları
 
