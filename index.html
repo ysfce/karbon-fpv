@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788777253";
+  var V = "1788777712";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -41,9 +41,6 @@
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-
-
-
 <style>
 /* ============================================================
    KARBON FPV — tek taahhütlü koyu dünya (gözlük feed'i).
@@ -3442,7 +3439,7 @@ function makeFrame(){
 }
 
 /* ================= 02 · MOTORLAR (2207) ================= */
-function makeMotor(){
+function makeMotor(lead){
   var m = new THREE.Group();
   var base = cyl(13.6,13.6,3,32,M.aluDark); base.position.y = 6.5; m.add(base);
   var stator = cyl(11.5,11.5,7,32,M.dark);  stator.position.y = 11; m.add(stator);
@@ -3456,17 +3453,36 @@ function makeMotor(){
   }
   var shaft = cyl(2.5,2.5,7,16,M.alu); shaft.position.y = 30; m.add(shaft);
   var nut   = cyl(4,4,2.6,6,M.aluDark); nut.position.y = 28.4; m.add(nut);
-  /* motor kablosu */
-  var curve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0,7,13), new THREE.Vector3(-6,6,22), new THREE.Vector3(-22,4,34)]);
-  var w = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 1.1, 8, false), M.wire);
-  w.castShadow = true; m.add(w);
+  /* Motor kablolari: yerel +Z govdenin merkezine bakiyor (makeMotors'taki
+     rotation.y bunu sagliyor), o yuzden uc nokta yalnizca +Z'de ilerler.
+     Uc faz kablosu kolun ust yuzeyinde (y=5) yan yana durur, alt plakanin
+     kenarinda (yaricap ~28 => z=85) hafifce yukselip yiginin altina girer. */
+  var WIRE_X = [-2.6, 0, 2.6];
+  for (var wi = 0; wi < 3; wi++){
+    var ox = WIRE_X[wi];
+    var curve = lead
+      ? new THREE.CatmullRomCurve3([
+          new THREE.Vector3(ox * .5, 8.2, 11.5),
+          new THREE.Vector3(ox,      6.4, 20),
+          new THREE.Vector3(ox,      6.1, 46),
+          new THREE.Vector3(ox * .8, 6.1, 72),
+          new THREE.Vector3(ox * .4, 7.6, 88)
+        ])
+      /* tek basina gosterilen motorda kablo cerceveyi bozmasin: kisa ucluk */
+      : new THREE.CatmullRomCurve3([
+          new THREE.Vector3(ox * .5, 8.2, 11.5),
+          new THREE.Vector3(ox,      6.6, 18),
+          new THREE.Vector3(ox * .9, 5.4, 25)
+        ]);
+    var w = new THREE.Mesh(new THREE.TubeGeometry(curve, 26, .85, 7, false), M.wire);
+    w.castShadow = true; m.add(w);
+  }
   return m;
 }
 function makeMotors(){
   var g = new THREE.Group();
   for (var sx=-1; sx<=1; sx+=2) for (var sz=-1; sz<=1; sz+=2){
-    var m = makeMotor();
+    var m = makeMotor(true);
     m.position.set(sx*MXY, 0, sz*MXY);
     m.rotation.y = Math.atan2(-sx, -sz);
     g.add(m);
