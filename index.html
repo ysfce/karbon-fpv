@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788869250";
+  var V = "1788870255";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -1173,7 +1173,9 @@ table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-botto
 .card:hover .thumb::before{opacity:1}
 .card .thumb svg,.card .thumb .pimg{width:62%;height:62%;transition:transform var(--d-in) var(--e-in)}
 .card:hover .thumb svg{transform:scale(1.06)}
-.card .brand{font:500 .64rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+/* Marka yazimi markanin kendisine ait: iFlight, T-Motor, HQProp. Buyuk
+   harfe cevirmek lang="tr" altinda i harfini İ yapip adi bozuyordu. */
+.card .brand{font:500 .66rem/1 var(--f-mono);letter-spacing:.1em;color:var(--dim)}
 .card .name{font-family:var(--f-disp);font-weight:700;font-size:.92rem;line-height:1.24;letter-spacing:-.006em;font-variation-settings:"wdth" 108;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card .chips{display:flex;flex-wrap:wrap;gap:5px}
@@ -1224,7 +1226,7 @@ table.spec tbody tr:last-child td,table.spec tbody tr:last-child th{border-botto
 .gal .thumbs button[aria-pressed="true"]{border-color:var(--accent);color:var(--text-2)}
 .gal .thumbs svg{width:52%;height:52%}
 .pinfo{display:grid;gap:18px}
-.pinfo .brand{font:500 .7rem/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.pinfo .brand{font:500 .74rem/1 var(--f-mono);letter-spacing:.11em;color:var(--accent)}
 .pinfo h1{margin:8px 0 0}
 .rate{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted)}
 .stars{display:flex;gap:2px}
@@ -1883,7 +1885,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
   display:grid;place-items:center;color:var(--text-2)}
 .opt-art svg{width:74%;height:74%}
 .opt-m{flex:1;min-width:0;display:grid;gap:3px}
-.opt-brand{font:500 .6rem/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.opt-brand{font:500 .62rem/1 var(--f-mono);letter-spacing:.09em;color:var(--dim)}
 .opt-name{font-size:.83rem;line-height:1.3;font-weight:500}
 .opt-meta{font:500 .68rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted)}
 .opt-why{font:500 .66rem/1.4 var(--f-mono);margin-top:2px}
@@ -2654,7 +2656,7 @@ function renderPDP(id){
       : (p.img ? '<img class="pimg" src="'+esc(p.img)+'" alt="'+esc(p.name)+'">'
       : '<span class="tk" data-tk="'+p.cat+'" data-tk-px="640" data-tk-view="'+pdpState.shot+'">'+
         '<svg viewBox="0 0 120 120"><use href="#'+ic+'"/></svg></span>'))+
-      '<div class="osd"><div><span>'+esc(p.brand.toUpperCase())+'</span><span>'+esc(CATMAP[p.cat].n.toUpperCase())+'</span></div>'+
+      '<div class="osd"><div><span>'+esc(p.brand)+'</span><span>'+esc(CATMAP[p.cat].n.toLocaleUpperCase('tr'))+'</span></div>'+
       '<div><span>'+(p.w?p.w+' G':'STOK '+sl[1].toUpperCase())+'</span><span>REF '+p.id.toUpperCase()+'</span></div></div></div>'+
     '<div class="thumbs">'+shots.slice(0, nShots).map(function(s,i){
       var inner = photos
@@ -3290,6 +3292,21 @@ onScroll(true);
 <style>
 /* WebGL sahnesi devreye girince vektör yedeği kapanır */
 .scene-3d canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+/* Cevirme yalnizca quad tamamlaninca acilir. Dokunmatikte dikey kaydirma
+   sayfanin montaji oldugu icin sadece yatay hareket bize geliyor. */
+.scene-3d.can-rot canvas{cursor:grab;touch-action:pan-y}
+.scene-3d.can-rot.rotating canvas{cursor:grabbing}
+.scene-3d canvas:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.rot-hint{
+  position:absolute;left:50%;bottom:4px;transform:translateX(-50%);
+  font:500 .6rem/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);background:rgba(9,11,15,.72);
+  border:1px solid var(--line-soft);border-radius:var(--r-sm);
+  padding:6px 10px;pointer-events:none;white-space:nowrap;z-index:4;
+  opacity:0;transition:opacity var(--d-in) var(--e-in)
+}
+.scene-3d.can-rot .rot-hint{opacity:1}
+.scene-3d.rotating .rot-hint{opacity:0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" onerror="window.__karbon2D&amp;&amp;window.__karbon2D()"></script>
 <script>
@@ -3388,11 +3405,8 @@ var M = {
   glass:    new THREE.MeshStandardMaterial({color:0x123f43, roughness:.06, metalness:.9}),
   lensRing: new THREE.MeshStandardMaterial({color:0x8f99a6, roughness:.3,  metalness:1}),
   wire:     new THREE.MeshStandardMaterial({color:0x2b323b, roughness:.72, metalness:.1}),
-  /* Opaklik 0,44 iken kanatlar koyu govde ve koyu zemin uzerinde
-     neredeyse kayboluyor, pervanenin yarisi yokmus gibi duruyordu.
-     0,8 polikarbonat izlenimini koruyor ama kanat her zeminde okunuyor. */
-  prop:     new THREE.MeshStandardMaterial({color:0x8d97a5, roughness:.28, metalness:.04, envMapIntensity:.5,
-              transparent:true, opacity:.8, side:THREE.DoubleSide}),
+  prop:     new THREE.MeshStandardMaterial({color:0x6b7684, roughness:.3,  metalness:.04, envMapIntensity:.5,
+              transparent:true, opacity:.44, side:THREE.DoubleSide}),
   teal:     new THREE.MeshStandardMaterial({color:0x3fe0bf, roughness:.4, metalness:.2,
               emissive:0x1c6b5c, emissiveIntensity:.6})
 };
@@ -3975,13 +3989,80 @@ function resize(){
   needsRender = true;
 }
 
+/* ================= tam montajda kendi ekseni etrafinda cevirme =================
+   Quad kurulup bittiginde kullanici modeli surukleyerek cevirebilir.
+   Yalnizca yatay eksen: dikey surukleme sayfanin montaj koreografisi,
+   onu ele gecirmiyoruz - dokunmatikte touch-action:pan-y ile birakiyoruz. */
+var ROT_AT = 0.86, RAD_PER_PX = 0.006;
+var userAz = 0, rotVel = 0, drag = null;
+var cv = renderer.domElement;
+cv.setAttribute('tabindex', '0');
+cv.setAttribute('role', 'application');
+cv.setAttribute('aria-label', 'Kurulu quad. Sürükleyerek ya da sağ/sol ok tuşlarıyla çevirin.');
+
+var hint = document.createElement('span');
+hint.className = 'rot-hint';
+hint.textContent = 'Sürükleyerek çevir';
+host.appendChild(hint);
+
+function rotOn(){ return progress >= ROT_AT; }
+function syncRot(){
+  var on = rotOn();
+  if (host.classList.contains('can-rot') === on) return;
+  host.classList.toggle('can-rot', on);
+  /* montaj geri sarilinca acilis kadrajina donsun */
+  if (!on){ userAz = 0; rotVel = 0; drag = null; host.classList.remove('rotating'); }
+}
+function turn(dxPx){ userAz += dxPx * RAD_PER_PX; apply(progress); }
+
+cv.addEventListener('pointerdown', function(e){
+  if (!rotOn() || e.button) return;
+  drag = { id:e.pointerId, x:e.clientX, y:e.clientY, t:e.timeStamp, v:0, axis:0 };
+  rotVel = 0;
+});
+cv.addEventListener('pointermove', function(e){
+  if (!drag || e.pointerId !== drag.id) return;
+  var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.axis){
+    /* ilk birkac pikselde yon belli olur; dikeyse dokunusu sayfaya birak */
+    if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+    if (Math.abs(dy) > Math.abs(dx)){ drag = null; return; }
+    drag.axis = 1;
+    host.classList.add('rotating');
+    try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+  }
+  var dt = Math.max(e.timeStamp - drag.t, 1);
+  drag.v = dx / dt;
+  drag.x = e.clientX; drag.y = e.clientY; drag.t = e.timeStamp;
+  turn(dx);
+});
+function endDrag(e){
+  if (!drag || (e && e.pointerId !== drag.id)) return;
+  rotVel = (reduce || !drag.axis) ? 0 : clamp(drag.v * 1000, -900, 900);
+  drag = null;
+  host.classList.remove('rotating');
+}
+cv.addEventListener('pointerup', endDrag);
+cv.addEventListener('pointercancel', endDrag);
+cv.addEventListener('keydown', function(e){
+  if (!rotOn()) return;
+  if (e.key === 'ArrowLeft'){ turn(-30); e.preventDefault(); }
+  else if (e.key === 'ArrowRight'){ turn(30); e.preventDefault(); }
+});
+
 function apply(p){
   progress = p;
+  syncRot();
   /* kamera yörüngesi */
   var e = ease(p);
-  var az = reduce ? rad(-8) : rad(lerp(-26, 12, e));
+  var az = (reduce ? rad(-8) : rad(lerp(-26, 12, e))) + userAz;
   var el = reduce ? rad(28) : rad(lerp(34, 22, e));
-  var d  = reduce ? 430 : lerp(490, 415, e);
+  /* Kamera montaj ilerledikce geri cekilir. Onceden yaklasiyordu
+     (490 -> 415); pervaneler gelince modelin en genis noktasi kareyi
+     asiyor ve kanat uclari bir anda kesiliyordu. Tam montajda o nokta
+     merkeze 177 mm; 40 derece dikey gorus acisinda 552 mm yaklasik %4
+     pay birakiyor. */
+  var d  = reduce ? 545 : lerp(490, 552, e);
   camera.position.set(
     Math.sin(az)*Math.cos(el)*d,
     Math.sin(el)*d + 20,
@@ -4017,7 +4098,7 @@ function apply(p){
 var v = new THREE.Vector3();
 var BOUND = [];
 for (var bi=0; bi<8; bi++){
-  BOUND.push(new THREE.Vector3((bi&1?1:-1)*148, (bi&2?74:0), (bi&4?1:-1)*148));
+  BOUND.push(new THREE.Vector3((bi&1?1:-1)*178, (bi&2?74:0), (bi&4?1:-1)*178));
 }
 function placeCallouts(){
   var w = host.clientWidth, h = host.clientHeight;
@@ -4072,6 +4153,12 @@ function frame(now){
     var sp = PARTS3D[7].obj.userData.spinners;
     for (var i=0;i<sp.length;i++) sp[i].rotation.y = spinAngle * sp[i].userData.dir;
     needsRender = true;
+  }
+  if (rotVel && !drag){
+    userAz += rotVel * RAD_PER_PX * dt;
+    rotVel *= Math.pow(0.02, dt);      /* saniyede ~%98 sonum */
+    if (Math.abs(rotVel) < 4) rotVel = 0;
+    apply(progress);
   }
   if (needsRender){
     renderer.render(scene, camera);
