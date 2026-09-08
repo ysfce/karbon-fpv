@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788872006";
+  var V = "1788872369";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -3766,14 +3766,8 @@ function makePack(){
   var xt = box(16,8,8,M.xt60); xt.position.set(0, 45, 40); g.add(xt);
   var pin1 = box(3.4,5,8.4,M.dark); pin1.position.set(-4, 45, 40); g.add(pin1);
   var pin2 = box(3.4,5,8.4,M.dark); pin2.position.set( 4, 45, 40); g.add(pin2);
-  /* Besleme kablosu: onceden pilin ustunden yukari kivrilip havada bir
-     tikacla bitiyordu. Artik XT60'tan asagi, ust kapagin arka kenarindan
-     govdenin icine iniyor - kablo bir yere gidiyor. */
-  var lead = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3( 5, 45, 42), new THREE.Vector3( 9, 40, 43),
-    new THREE.Vector3(10, 33, 39), new THREE.Vector3( 6, 27, 30),
-    new THREE.Vector3( 2, 24, 22)]), 26, 1.4, 8, false), M.wire);
-  lead.castShadow = true; g.add(lead);
+  /* Besleme kablosu yok: pilin uzerinde dolasan kordon montaj sahnesinde
+     dagitiyordu. Arkada yalnizca XT60 duruyor. */
   return g;
 }
 
