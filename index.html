@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788868139";
+  var V = "1788868605";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -362,6 +362,16 @@ main{padding-top:calc(var(--hud-h) + 26px)}
   display:flex;flex-direction:column;gap:12px;justify-content:center;
   min-width:0
 }
+/* Acilis ekraninda (adim 0) liste bos ve anlamsiz duruyordu; ilk adim
+   paneliyle birlikte geliyor. Izgara sutunu yerinde kaliyor - gizlemek
+   icin display degil visibility kullaniliyor - yoksa 3D sahne kayardi. */
+.manifest{
+  opacity:0;visibility:hidden;transform:translateX(10px);
+  transition:opacity var(--d-in) var(--e-in),transform var(--d-in) var(--e-in),
+             visibility 0s linear var(--d-in)
+}
+.manifest.is-on{opacity:1;visibility:visible;transform:none;transition-delay:0s,0s,0s}
+@media (prefers-reduced-motion:reduce){ .manifest{transform:none} }
 .manifest-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .manifest-head .tag{letter-spacing:.14em}
 .m-rows{display:grid;gap:0;border-top:1px solid var(--line-soft)}
@@ -3119,6 +3129,7 @@ el('callouts').innerHTML = PARTS.map(function(pt,i){
 callouts = Array.prototype.slice.call(el('callouts').children);
 
 layers = Array.prototype.slice.call(scene.querySelectorAll('.layer'));
+var manifest = document.querySelector('.manifest');
 
 var lastP = -1, rafPending = false;
 function onScroll(force){
@@ -3144,6 +3155,7 @@ function onScroll(force){
     var active = 0;
     for(var i=0;i<PANEL_AT.length;i++){ if(p >= PANEL_AT[i]) active = i+1; }
     if(p >= FINALE_AT) active = 10;
+    if(manifest) manifest.classList.toggle('is-on', active > 0);
 
     /* katmanlar */
     var wSum = 0, pSum = 0, done = 0;
