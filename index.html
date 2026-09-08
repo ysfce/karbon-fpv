@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788868605";
+  var V = "1788869250";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -3388,8 +3388,11 @@ var M = {
   glass:    new THREE.MeshStandardMaterial({color:0x123f43, roughness:.06, metalness:.9}),
   lensRing: new THREE.MeshStandardMaterial({color:0x8f99a6, roughness:.3,  metalness:1}),
   wire:     new THREE.MeshStandardMaterial({color:0x2b323b, roughness:.72, metalness:.1}),
-  prop:     new THREE.MeshStandardMaterial({color:0x6b7684, roughness:.3,  metalness:.04, envMapIntensity:.5,
-              transparent:true, opacity:.44, side:THREE.DoubleSide}),
+  /* Opaklik 0,44 iken kanatlar koyu govde ve koyu zemin uzerinde
+     neredeyse kayboluyor, pervanenin yarisi yokmus gibi duruyordu.
+     0,8 polikarbonat izlenimini koruyor ama kanat her zeminde okunuyor. */
+  prop:     new THREE.MeshStandardMaterial({color:0x8d97a5, roughness:.28, metalness:.04, envMapIntensity:.5,
+              transparent:true, opacity:.8, side:THREE.DoubleSide}),
   teal:     new THREE.MeshStandardMaterial({color:0x3fe0bf, roughness:.4, metalness:.2,
               emissive:0x1c6b5c, emissiveIntensity:.6})
 };
@@ -3671,19 +3674,42 @@ function bladeGeometry(){
   g.rotateX(-Math.PI/2);
   return g;
 }
-var BLADE = null;
+/* Aynalanmis kanat. Grubu scale.z = -1 ile cevirmek uculardan ikisinin
+   yuzey normallerini ters ceviriyordu: DoubleSide sayesinde ucgenler
+   ciziliyor ama isik yanlis taraftan hesaplaniyor, o pervaneler bir yari
+   sonmus gibi duruyordu. Burada geometri gercekten aynalanip ucgen sarim
+   yonu duzeltiliyor, normaller yeniden hesaplaniyor. */
+function mirrorZ(geo){
+  var g = geo.clone();
+  g.applyMatrix4(new THREE.Matrix4().makeScale(1, 1, -1));
+  var tmp;
+  if (g.index){
+    var a = g.index.array;
+    for (var i = 0; i < a.length; i += 3){ tmp = a[i]; a[i] = a[i+2]; a[i+2] = tmp; }
+    g.index.needsUpdate = true;
+  } else {
+    var p = g.attributes.position.array;
+    for (var j = 0; j < p.length; j += 9){
+      for (var k = 0; k < 3; k++){ tmp = p[j+k]; p[j+k] = p[j+6+k]; p[j+6+k] = tmp; }
+    }
+    g.attributes.position.needsUpdate = true;
+  }
+  g.computeVertexNormals();
+  return g;
+}
+var BLADE = null, BLADE_M = null;
 function makeProp(cw){
   var g = new THREE.Group();
-  if (!BLADE) BLADE = bladeGeometry();
+  if (!BLADE){ BLADE = bladeGeometry(); BLADE_M = mirrorZ(BLADE); }
+  var geo = cw ? BLADE : BLADE_M;
   for (var i=0;i<3;i++){
-    var b = new THREE.Mesh(BLADE, M.prop);
+    var b = new THREE.Mesh(geo, M.prop);
     b.castShadow = true;
     b.rotation.y = i/3*Math.PI*2;
     g.add(b);
   }
   var hub = cyl(8,8,5.5,24,M.alu); hub.position.y = 1.6; g.add(hub);
   var hole = cyl(2.6,2.6,6.4,14,M.dark); hole.position.y = 1.6; g.add(hole);
-  if (!cw) g.scale.z = -1;
   return g;
 }
 function makeProps(){
