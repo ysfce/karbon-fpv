@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788871098";
+  var V = "1788872006";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -3781,8 +3781,28 @@ function makePack(){
    yolu takip ettigi icin setDrawRange ile bastan sona acilinca kayis
    gercekten bataryanin etrafina sariliyormus gibi cizilir. */
 function strapGeo(w, h, r, band, thick){
-  var pts = roundRect(w, h, r).getSpacedPoints(120);
-  var n = pts.length, pos = [], idx = [], i, k;
+  var pts = roundRect(w, h, r).getSpacedPoints(120), i, k;
+  /* getSpacedPoints kapanis noktasini tekrarliyor; halka olarak isleyecegiz */
+  if (pts.length > 1 &&
+      Math.abs(pts[0].x - pts[pts.length-1].x) < 1e-6 &&
+      Math.abs(pts[0].y - pts[pts.length-1].y) < 1e-6) pts.pop();
+
+  /* Sarilma dronun sol yanindan baslayip yukari dogru donsun: diziyi sol
+     ortadaki noktadan basliyor hale getiriyoruz, yon asagi bakiyorsa
+     halkayi ters ceviriyoruz. setDrawRange yolu bu sirayla aciyor. */
+  function leftMid(a){
+    var bi = 0, bd = Infinity;
+    for (var j = 0; j < a.length; j++){
+      var d = Math.abs(a[j].x + w/2) * 3 + Math.abs(a[j].y);
+      if (d < bd){ bd = d; bi = j; }
+    }
+    return bi;
+  }
+  var s0 = leftMid(pts);
+  if (pts[(s0 + 1) % pts.length].y < pts[s0].y){ pts.reverse(); s0 = leftMid(pts); }
+  pts = pts.slice(s0).concat(pts.slice(0, s0));
+
+  var n = pts.length, pos = [], idx = [];
   var hb = band / 2, ht = thick / 2;
   for (i = 0; i < n; i++){
     var p = pts[i], a = pts[(i-1+n) % n], b = pts[(i+1) % n];
@@ -3793,8 +3813,8 @@ function strapGeo(w, h, r, band, thick){
              p.x - nx*ht, p.y - ny*ht,  hb,
              p.x - nx*ht, p.y - ny*ht, -hb);
   }
-  for (i = 0; i < n - 1; i++){
-    var A = i*4, B = (i+1)*4;
+  for (i = 0; i < n; i++){
+    var A = i*4, B = ((i+1) % n) * 4;
     for (k = 0; k < 4; k++){
       var k2 = (k+1) % 4;
       idx.push(A+k, B+k, B+k2, A+k, B+k2, A+k2);
@@ -3808,13 +3828,12 @@ function strapGeo(w, h, r, band, thick){
 }
 function makeStrap(){
   var g = new THREE.Group();
-  var geo = strapGeo(38, 35, 5, 15, 2.2);
-  for (var s = -1; s <= 1; s += 2){
-    var m = new THREE.Mesh(geo, M.strap);
-    m.position.set(0, 54, s*20);
-    m.castShadow = m.receiveShadow = true;
-    g.add(m);
-  }
+  /* tek kayis, pilin ortasindan */
+  var geo = strapGeo(38, 35, 5, 21, 2.2);
+  var m = new THREE.Mesh(geo, M.strap);
+  m.position.set(0, 54, 0);
+  m.castShadow = m.receiveShadow = true;
+  g.add(m);
   g.userData.geo = geo;
   g.userData.total = geo.index.count;
   return g;
