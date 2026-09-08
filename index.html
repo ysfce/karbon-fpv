@@ -18,7 +18,7 @@
    En fazla iki deneme yapar, sonsuz döngüye girmez.
    --------------------------------------------------------------- */
 (function () {
-  var V = "1788870255";
+  var V = "1788871098";
   var KEY = "kfpv-try";
   function tries() { try { return +(sessionStorage.getItem(KEY) || 0); } catch (e) { return 99; } }
   if (tries() >= 2) return;
@@ -3754,25 +3754,69 @@ function makeTop(){
 }
 
 function makeBattery(){
-  var plate = makeTop(), pack = makePack(), g = new THREE.Group();
-  g.add(plate); g.add(pack);
-  g.userData.stagger = { plate: plate, pack: pack };
+  var plate = makeTop(), pack = makePack(), strap = makeStrap(), g = new THREE.Group();
+  g.add(plate); g.add(pack); g.add(strap);
+  g.userData.stagger = { plate: plate, pack: pack, strap: strap };
   return g;
 }
 function makePack(){
   var g = new THREE.Group();
   var pack = slab(roundRect(34, 74, 4), 32, M.wrap); pack.position.y = 38; g.add(pack);
   var band = slab(roundRect(34.4, 74.4, 4), 11, M.anod); band.position.y = 47; g.add(band);
-  for (var s=-1; s<=1; s+=2){
-    var st = box(38, 38, 4.5, M.strap); st.position.set(0, 54, s*23); g.add(st);
-  }
   var xt = box(16,8,8,M.xt60); xt.position.set(0, 45, 40); g.add(xt);
   var pin1 = box(3.4,5,8.4,M.dark); pin1.position.set(-4, 45, 40); g.add(pin1);
   var pin2 = box(3.4,5,8.4,M.dark); pin2.position.set( 4, 45, 40); g.add(pin2);
+  /* Besleme kablosu: onceden pilin ustunden yukari kivrilip havada bir
+     tikacla bitiyordu. Artik XT60'tan asagi, ust kapagin arka kenarindan
+     govdenin icine iniyor - kablo bir yere gidiyor. */
   var lead = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3(10,49,39), new THREE.Vector3(18,56,35), new THREE.Vector3(22,63,27)]), 14, 1.4, 8, false), M.wire);
+    new THREE.Vector3( 5, 45, 42), new THREE.Vector3( 9, 40, 43),
+    new THREE.Vector3(10, 33, 39), new THREE.Vector3( 6, 27, 30),
+    new THREE.Vector3( 2, 24, 22)]), 26, 1.4, 8, false), M.wire);
   lead.castShadow = true; g.add(lead);
-  var plug = box(9,4,3,M.strap); plug.position.set(22,64,26); g.add(plug);
+  return g;
+}
+
+/* Batarya kayisi. Yol boyunca sirali ucgenlerden kuruluyor: index dizisi
+   yolu takip ettigi icin setDrawRange ile bastan sona acilinca kayis
+   gercekten bataryanin etrafina sariliyormus gibi cizilir. */
+function strapGeo(w, h, r, band, thick){
+  var pts = roundRect(w, h, r).getSpacedPoints(120);
+  var n = pts.length, pos = [], idx = [], i, k;
+  var hb = band / 2, ht = thick / 2;
+  for (i = 0; i < n; i++){
+    var p = pts[i], a = pts[(i-1+n) % n], b = pts[(i+1) % n];
+    var tx = b.x - a.x, ty = b.y - a.y, L = Math.hypot(tx, ty) || 1;
+    var nx = ty / L, ny = -tx / L;
+    pos.push(p.x + nx*ht, p.y + ny*ht, -hb,
+             p.x + nx*ht, p.y + ny*ht,  hb,
+             p.x - nx*ht, p.y - ny*ht,  hb,
+             p.x - nx*ht, p.y - ny*ht, -hb);
+  }
+  for (i = 0; i < n - 1; i++){
+    var A = i*4, B = (i+1)*4;
+    for (k = 0; k < 4; k++){
+      var k2 = (k+1) % 4;
+      idx.push(A+k, B+k, B+k2, A+k, B+k2, A+k2);
+    }
+  }
+  var g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+function makeStrap(){
+  var g = new THREE.Group();
+  var geo = strapGeo(38, 35, 5, 15, 2.2);
+  for (var s = -1; s <= 1; s += 2){
+    var m = new THREE.Mesh(geo, M.strap);
+    m.position.set(0, 54, s*20);
+    m.castShadow = m.receiveShadow = true;
+    g.add(m);
+  }
+  g.userData.geo = geo;
+  g.userData.total = geo.index.count;
   return g;
 }
 
@@ -4013,7 +4057,9 @@ function syncRot(){
   /* montaj geri sarilinca acilis kadrajina donsun */
   if (!on){ userAz = 0; rotVel = 0; drag = null; host.classList.remove('rotating'); }
 }
-function turn(dxPx){ userAz += dxPx * RAD_PER_PX; apply(progress); }
+/* Sahnede donen kamera; azimut artarken model ters yone kayiyor gibi
+   gorunuyor. Isaret cevrildi ki model parmagi (ya da ok tusunu) takip etsin. */
+function turn(dxPx){ userAz -= dxPx * RAD_PER_PX; apply(progress); }
 
 cv.addEventListener('pointerdown', function(e){
   if (!rotOn() || e.button) return;
@@ -4076,10 +4122,18 @@ function apply(p){
     var te = ease(t);
     var stg = pt.obj.userData.stagger;
     if (stg){
-      /* kapak ilk yarıda iner, pil ikinci yarıda onun üstüne oturur */
+      /* üç hareket: önce kapak iner, sonra pil üstüne oturur,
+         en sonda kayış pilin etrafına sarılıp onu gövdeye bağlar */
       pt.obj.position.y = pt.baseY;
-      stg.plate.position.y = reduce ? 0 : (1-ease(clamp(t/0.5,0,1)))       * 72;
-      stg.pack.position.y  = reduce ? 0 : (1-ease(clamp((t-0.34)/0.66,0,1))) * pt.drop;
+      stg.plate.position.y = reduce ? 0 : (1-ease(clamp(t/0.34,0,1)))        * 72;
+      stg.pack.position.y  = reduce ? 0 : (1-ease(clamp((t-0.22)/0.44,0,1))) * pt.drop;
+      /* Sarilma cizgisel ilerlemeli: ease-out kayisin yarisini ilk anda
+         aciyor ve hareket sarma degil sicrama gibi duruyordu. */
+      var wf = clamp((t - 0.64) / 0.36, 0, 1);
+      var wrap = reduce ? (t > 0.7 ? 1 : 0) : wf*wf*(3 - 2*wf);
+      var sd = stg.strap.userData;
+      sd.geo.setDrawRange(0, Math.floor(sd.total * wrap / 3) * 3);
+      stg.strap.visible = wrap > 0.001;
     } else {
       pt.obj.position.y = pt.baseY + (reduce ? 0 : (1-te) * pt.drop);
     }
@@ -4155,7 +4209,7 @@ function frame(now){
     needsRender = true;
   }
   if (rotVel && !drag){
-    userAz += rotVel * RAD_PER_PX * dt;
+    userAz -= rotVel * RAD_PER_PX * dt;
     rotVel *= Math.pow(0.02, dt);      /* saniyede ~%98 sonum */
     if (Math.abs(rotVel) < 4) rotVel = 0;
     apply(progress);
