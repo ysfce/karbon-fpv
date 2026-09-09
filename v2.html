@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Karbon FPV</title>
+<title>Karbon FPV — aydınlık</title>
 <meta name="description" content="FPV yarış ve freestyle drone parçaları. Gövde, motor, ESC, uçuş kontrol kartı, VTX, kamera, pervane ve LiPo — kaydırdıkça 3D olarak kurulan bir quad.">
 <meta name="color-scheme" content="dark">
 <meta property="og:title" content="Karbon FPV">
@@ -2000,7 +2000,7 @@ footer{border-top:1px solid var(--line-soft);background:var(--carbon);padding:cl
       <p>Montaj sahnesi <code>sections/build-scroll.liquid</code> olarak tek bölüm; 9 parça <code>blocks</code> ile yönetilir (parça adı, gramaj, ürün referansı). Katalog <code>templates/collection.json</code> + metafield filtreleri (<code>montaj_deseni</code>, <code>hucre</code>, <code>boyut</code>). Ürün sayfası <code>templates/product.json</code>, varyantlar KV/kapasite olarak. Kit "sepete ekle" tek istekte çoklu <code>/cart/add.js</code> ile çalışır.</p>
     </div>
     <div class="f-bot">
-      <p>© 2026 Karbon FPV Elektronik Tic. Ltd. Şti. · Tüm fiyatlar KDV dahildir. · <a href="v2.html" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">Aydınlık tasarımı gör</a> · <a href="2d.html" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">2D vektör sürümü</a></p>
+      <p>© 2026 Karbon FPV Elektronik Tic. Ltd. Şti. · Tüm fiyatlar KDV dahildir. · <a href="./" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">Koyu tasarıma dön</a></p>
       <div class="pays"><span>VISA</span><span>MASTERCARD</span><span>TROY</span><span>HAVALE</span><span>3D SECURE</span></div>
     </div>
   </div>
@@ -4279,5 +4279,288 @@ window.addEventListener('load', function(){ resize(); onScroll3D(); });
 })();
 </script>
 
+
+<style>
+/* ================================================================
+   KARBON FPV — 2. TASARIM: "aydınlık, sakin mağaza"
+   Aynı işaretleme, aynı JavaScript, aynı 3D sahne. Değişen tek şey
+   bu katman: kırık beyaz zemin, tek koyu vurgu, gölgesiz yüzeyler,
+   daha az çizgi. Arayüz geri çekilir, rengi ürünün kendisi taşır —
+   turuncu yalnızca marka işaretinde ve modelin anodize parçalarında
+   kalır, hiçbir düğmeye bulaşmaz.
+   ================================================================ */
+:root{
+  --ink:#FAFAF8;
+  --carbon:#FFFFFF;
+  --raise:#F4F3EF;
+  --raise-2:#EDEBE5;
+  --line:#DFDDD6;
+  --line-soft:#EAE8E2;
+  --text:#15171B;
+  --text-2:#494F58;
+  --muted:#666D77;
+  --dim:#6A717B;            /* #FAFAF8 üzerinde 5,1:1 — AA */
+  --accent:#15171B;         /* tek koyu vurgu; turuncu arayüzden çekildi */
+  --accent-ink:#FFFFFF;
+  --accent-soft:rgba(21,23,27,.055);
+  --accent-line:rgba(21,23,27,.16);
+  --data:#0E6E5E;           /* veri yeşili, koyu ton: beyaz üstünde 5,3:1 */
+  --data-soft:rgba(14,110,94,.08);
+  --warn:#9A6B00;
+  --crit:#B3243C;
+  --brand:#E4501A;          /* yalnızca marka işareti */
+
+  /* Emil: giriş her zaman güçlü ease-out; UI hareketi 300 ms altında */
+  --e-in:cubic-bezier(.23,1,.32,1);
+  --e-state:cubic-bezier(.23,1,.32,1);
+  --d-in:200ms; --d-state:140ms;
+
+  --r-sm:4px; --r-md:8px; --r-lg:14px;
+  --sec-tight:clamp(48px,6vh,76px);
+  --sec:clamp(68px,9vh,120px);
+  --sec-loose:clamp(92px,13vh,168px);
+
+  color-scheme:light;
+}
+
+body{background:var(--ink);color:var(--text)}
+
+/* Başlıklar: aynı aile, daha dar ve daha hafif. Endüstriyel genişlik
+   yerine sakin bir kitap kapağı oranı. */
+.d-xl{font-size:clamp(2.6rem,5vw,4.1rem);font-weight:600;font-variation-settings:"wdth" 100;letter-spacing:-.028em;line-height:1.02}
+.d-lg{font-weight:600;font-variation-settings:"wdth" 100;letter-spacing:-.019em}
+.d-md{font-weight:600;font-variation-settings:"wdth" 100;letter-spacing:-.011em}
+.d-sm{font-weight:600;font-variation-settings:"wdth" 100}
+.lede{color:var(--text-2)}
+
+/* Etiketler mono'dan çıkıp gövde yazısına geçiyor: teknik gösterge
+   hissi bu tasarımın istediği şey değil. Sayılar mono kalır. */
+.tag{font-family:var(--f-body);font-weight:500;font-size:.7rem;letter-spacing:.1em;color:var(--muted)}
+.tag-a{color:var(--text)}
+
+/* ---------------- üst çerçeve ---------------- */
+.hud-strip{background:var(--text);color:#FFF;letter-spacing:.06em}
+.hud-bar{
+  background:rgba(250,250,248,.86);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+}
+.mark i{color:var(--brand)}
+.nav a{color:var(--muted)}
+.nav a:hover,.nav a[aria-current="page"]{color:var(--text)}
+.nav a::after{background:var(--text)}
+.search{background:var(--carbon);border-color:var(--line)}
+.search:focus-within{border-color:var(--text)}
+.icon-btn{background:var(--carbon);border-color:var(--line)}
+.icon-btn:hover{background:var(--raise);border-color:var(--line)}
+.hud-telem b{color:var(--data)}
+.cart-count{background:var(--text);color:#FFF}
+
+/* ---------------- düğmeler ---------------- */
+.btn-primary{background:var(--text);color:#FFF}
+.btn-primary:hover{background:#2C3038}
+.btn-ghost{border-color:var(--line);color:var(--text);background:var(--carbon)}
+.btn-ghost:hover{border-color:var(--text);background:var(--carbon)}
+.chip{background:var(--carbon);border-color:var(--line);color:var(--text-2)}
+.chip-a{border-color:var(--accent-line);background:var(--accent-soft);color:var(--text)}
+.chip-d{border-color:rgba(14,110,94,.22);background:var(--data-soft);color:var(--data)}
+
+/* ---------------- montaj sahnesi ---------------- */
+/* Beyaz zeminde ızgara ve turuncu parıltı gürültü oluyor; sahne
+   ürün fotoğrafı gibi dursun diye ikisi de gidiyor, yerine tek bir
+   yumuşak zemin geçişi kalıyor. */
+.stage-grid{display:none}
+.stage-glow{
+  background:radial-gradient(circle,rgba(21,23,27,.05),rgba(21,23,27,.015) 44%,transparent 68%)
+}
+.step-idx{color:var(--muted)}
+.step-line{background:var(--line)}
+.panel .brand-line{font-family:var(--f-body);letter-spacing:.09em;color:var(--muted)}
+/* tek renk noktası: açılış işareti */
+.opener .kicker i{background:var(--brand);box-shadow:0 0 0 4px rgba(228,80,26,.12)}
+.manifest{
+  background:none;border-left:1px solid var(--line-soft);
+  backdrop-filter:none;-webkit-backdrop-filter:none
+}
+/* Gelmemiş satırlar koyu zeminde 0,24 opaklıkla okunuyordu; açık zeminde
+   aynı değer metni tamamen siliyor. */
+.m-row{opacity:.42}
+.m-row.is-hot .n,.m-row.is-hot .i{color:var(--text)}
+.callout .txt{
+  background:rgba(255,255,255,.92);border-color:var(--line);color:var(--text);
+  font-family:var(--f-body);letter-spacing:.08em
+}
+.callout .dot{background:var(--text);box-shadow:0 0 0 3px rgba(21,23,27,.12)}
+.callout .lead{background:var(--line)}
+.rail-btn.now{color:var(--text);border-color:var(--text)}
+.rail-btn.done{color:var(--muted)}
+.rail-btn{font-family:var(--f-body);letter-spacing:.07em}
+.scroll-cue{font-family:var(--f-body);letter-spacing:.1em}
+
+/* ---------------- kategori ızgarası ---------------- */
+.cats{background:var(--line-soft);border-color:var(--line-soft)}
+.cat{background:var(--carbon)}
+.cat:hover{background:var(--raise)}
+
+/* ---------------- katalog kartı ----------------
+   Çerçeve ve zemin kalkıyor: kart artık görsel + ad + fiyat.
+   Ayrım kartın kendi zeminiyle değil, aradaki boşlukla yapılıyor. */
+.grid-p{background:none;border:0;gap:clamp(18px,2.4vw,32px) clamp(14px,1.8vw,24px)}
+.card{background:none;padding:0;gap:12px}
+.card:hover{background:none}
+/* Ürün fotoğraflarının zemini beyaz; kutuyu da beyaz yapıp sınırı
+   saç teli çizgiyle çiziyoruz. Gri kutu, beyaz zeminli fotoğrafın
+   içinde ikinci bir dikdörtgen olarak görünüyordu. */
+.card .thumb{background:var(--carbon);border:1px solid var(--line-soft);border-radius:var(--r-lg);aspect-ratio:1.06}
+.card .thumb::before{display:none}
+.card .brand{font-family:var(--f-body);letter-spacing:.04em;color:var(--muted)}
+.card .name{font-weight:600;font-variation-settings:"wdth" 100}
+.card .price{font-weight:500}
+.card .add{left:0;right:0;bottom:0;background:var(--text);color:#FFF}
+.card .flag{top:10px;left:10px;background:var(--text);color:#FFF;font-family:var(--f-body);letter-spacing:.06em}
+.card .flag.new{background:var(--data);color:#FFF}
+.card .stock{font-family:var(--f-body);letter-spacing:.02em}
+.empty{background:none}
+@media (hover:hover) and (pointer:fine){
+  .card:hover .thumb svg,.card:hover .thumb .tk{transform:scale(1.03)}
+  .cat:hover .art .tk{transform:scale(1.03) rotate(-2deg)}
+}
+
+/* ---------------- ürün sayfası ---------------- */
+.gal .main{background:var(--carbon);border-color:var(--line-soft);border-radius:var(--r-lg)}
+.gal .main::before{display:none}
+.gal .main .osd{color:var(--muted);font-family:var(--f-body);letter-spacing:.05em}
+.gal .thumbs button{background:var(--carbon);border-color:var(--line-soft);border-radius:var(--r-md)}
+.gal .thumbs button[aria-pressed="true"]{border-color:var(--text)}
+.pinfo .brand{font-family:var(--f-body);letter-spacing:.06em;color:var(--muted)}
+.price-row .p{font-weight:500}
+.stars svg{fill:#C9861A}
+.stars svg.off{fill:var(--line)}
+
+/* ---------------- kitler, rehber, güven bandı ---------------- */
+.kit{background:var(--carbon);border-color:var(--line-soft)}
+.kit .art{background:var(--carbon)}
+.steps3 li{border-left-color:var(--line)}
+.steps3 .no{color:var(--muted);font-family:var(--f-body);letter-spacing:.1em}
+.trust svg{stroke:var(--text)}
+.sec-alt{background:var(--carbon);border-color:var(--line-soft)}
+
+/* ---------------- sepet, yapılandırıcı, altbilgi ---------------- */
+.drawer{background:var(--carbon)}
+.cfg-sum{background:var(--carbon);border-color:var(--line-soft)}
+.opt-brand{font-family:var(--f-body);letter-spacing:.05em;color:var(--muted)}
+footer{background:var(--carbon);border-color:var(--line-soft)}
+.f-col h4{font-family:var(--f-body);letter-spacing:.09em;color:var(--muted)}
+.f-col a:hover{color:var(--text)}
+.f-bot p{font-family:var(--f-body)}
+
+/* ---------------- 3D sahne yardımcıları ---------------- */
+.rot-hint{
+  background:rgba(255,255,255,.86);border-color:var(--line);color:var(--muted);
+  font-family:var(--f-body);letter-spacing:.09em
+}
+.scene-3d canvas:focus-visible{outline-color:var(--text)}
+
+@media (hover:hover) and (pointer:fine){
+  .kit:hover{border-color:var(--line)}
+}
+
+/* ================================================================
+   HAREKET
+   Aydınlık tasarım daha sakin olduğu için hareket de daha az ama
+   daha doğru: giriş her yerde güçlü ease-out, süreler 300 ms'in
+   altında, çıkış girişten hızlı.
+   ================================================================ */
+
+/* Bildirim: temel sürümde geçiş tanımı yok, kutu olduğu yerde
+   birden beliriyordu. Açık zeminde koyu yüzey hem okunur hem de
+   "tek koyu vurgu" kuralıyla aynı dili konuşuyor. */
+.toast{
+  background:var(--text);border-color:var(--text);color:#FFF;
+  box-shadow:0 10px 30px rgba(21,23,27,.14);
+  transition:transform 200ms var(--e-in),opacity 140ms var(--e-in)
+}
+.toast svg{stroke:#6FE3C4}
+
+.scrim{background:rgba(21,23,27,.34);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+
+/* Adım paneli: yalnız opaklık yerine 6 px'lik bir yükselme de var.
+   Hiçbir şey yoktan belirmez; küçük bir yer değiştirme paneli
+   "geldi" hissettiriyor. Çıkış girişin yarısı kadar sürüyor. */
+.panel{transition:opacity 140ms var(--e-in),visibility 140ms,transform 140ms var(--e-in)}
+.panel:not(.is-on){transform:translateY(-50%) translateY(6px)}
+.panel.is-on{transition-duration:260ms,260ms,260ms}
+
+/* Katalog kartları sırayla giriyor — filtre değiştiğinde listenin
+   yenilendiği anlaşılıyor. Gecikme ilk on kartla sınırlı, yoksa
+   uzun listede son kart saniyelerce bekliyor. */
+@keyframes v2CardIn{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.grid-p .card{animation:v2CardIn 260ms var(--e-in) both}
+.grid-p .card:nth-child(1){animation-delay:0ms}
+.grid-p .card:nth-child(2){animation-delay:26ms}
+.grid-p .card:nth-child(3){animation-delay:52ms}
+.grid-p .card:nth-child(4){animation-delay:78ms}
+.grid-p .card:nth-child(5){animation-delay:104ms}
+.grid-p .card:nth-child(6){animation-delay:130ms}
+.grid-p .card:nth-child(7){animation-delay:156ms}
+.grid-p .card:nth-child(8){animation-delay:182ms}
+.grid-p .card:nth-child(n+9){animation-delay:200ms}
+
+/* Basma geri bildirimi arayüzün her yerinde aynı olsun */
+.cat:active,.kit:active,.gal .thumbs button:active,.rail-btn:active{transform:scale(.99)}
+.cat,.kit,.gal .thumbs button{transition:background var(--d-state) var(--e-state),
+  border-color var(--d-state) var(--e-state),transform var(--d-state) var(--e-state)}
+
+@media (prefers-reduced-motion:reduce){
+  .grid-p .card{animation:none}
+  .panel:not(.is-on){transform:translateY(-50%)}
+  .toast{transition:opacity 140ms linear}
+}
+</style>
+<script>
+/* ================================================================
+   2. TASARIM — 3D sahnenin aydınlık zemine uyarlanması
+   Modeller ve montaj koreografisi aynı; yalnızca ışık düzeni ve
+   zemin gölgesi değişiyor. Koyu sahnenin sert anahtar ışığı ve
+   soğuk dolgusu beyaz zeminde parçaları siyah lekeye çeviriyordu.
+   ================================================================ */
+(function () {
+  function tune() {
+    var api = window.__karbon3D;
+    if (!api || !api.scene) return false;
+    api.scene.traverse(function (o) {
+      if (o.isDirectionalLight) {
+        if (o.intensity > 1.5) {
+          o.intensity = 1.7;                     /* anahtar: kontrastı düşür */
+        } else if (o.position.z < -100) {
+          o.color.set(0xffe4d1);                 /* kenar: ılık ama soluk */
+          o.color.convertSRGBToLinear();
+          o.intensity = 0.4;
+        } else {
+          o.color.set(0xffffff);                 /* dolgu: mavi tonu çıkar */
+          o.color.convertSRGBToLinear();
+          o.intensity = 0.66;
+        }
+      } else if (o.isHemisphereLight) {
+        o.color.set(0xffffff);
+        o.groundColor.set(0xe8e6e0);             /* zemin sıçraması: kırık beyaz */
+        o.color.convertSRGBToLinear();
+        o.groundColor.convertSRGBToLinear();
+        o.intensity = 1.05;
+      } else if (o.isMesh && o.material && o.material.isShadowMaterial) {
+        o.material.opacity = 0.11;               /* beyazda 0,3 kir gibi duruyor */
+      }
+    });
+    api.resize();                                /* yeniden çizdir */
+    return true;
+  }
+  var tries = 0;
+  (function poll() {
+    if (tune() || ++tries > 40) return;
+    setTimeout(poll, 120);
+  })();
+})();
+</script>
 </body>
 </html>
